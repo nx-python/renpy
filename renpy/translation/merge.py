@@ -53,7 +53,7 @@ def merge_strings():
     if args.reverse:
         new_data = { }
 
-        for k, v in data.items():
+        for k, v in list(data.items()):
             new_data[v] = k
 
         data = new_data
@@ -62,7 +62,7 @@ def merge_strings():
 
     renpy.config.clear_lines = False
 
-    for k, v in st.translations.items():
+    for k, v in list(st.translations.items()):
 
         trivial = (not v) or (k == v)
 
@@ -77,7 +77,7 @@ def merge_strings():
 
         new = data[k]
         quoted = renpy.translation.quote_unicode(new)
-        code = u'new "{}"'.format(quoted)
+        code = 'new "{}"'.format(quoted)
 
         filename, linenumber = st.translation_loc[k]
         renpy.scriptedit.insert_line_before(code, filename, linenumber)
