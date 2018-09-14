@@ -94,7 +94,7 @@ class ImageFont(object):
             return
 
         for g in glyphs:
-            c = unichr(g.character)
+            c = chr(g.character)
 
             cxo, cyo = self.offsets[c]
             x = g.x + xo + cxo
@@ -151,20 +151,20 @@ class SFont(ImageFont):
             self.baseline = height + self.baseline  # W0201
 
         # Create space characters.
-        self.chars[u' '] = renpy.display.pgrender.surface((self.spacewidth, height), True)
-        self.width[u' '] = self.spacewidth
-        self.advance[u' '] = self.spacewidth
-        self.offsets[u' '] = (0, 0)
+        self.chars[' '] = renpy.display.pgrender.surface((self.spacewidth, height), True)
+        self.width[' '] = self.spacewidth
+        self.advance[' '] = self.spacewidth
+        self.offsets[' '] = (0, 0)
 
-        self.chars[u'\u200b'] = renpy.display.pgrender.surface((0, height), True)
-        self.width[u'\u200b'] = 0
-        self.advance[u'\u200b'] = 0
-        self.offsets[u'\u200b'] = (0, 0)
+        self.chars['\u200b'] = renpy.display.pgrender.surface((0, height), True)
+        self.width['\u200b'] = 0
+        self.advance['\u200b'] = 0
+        self.offsets['\u200b'] = (0, 0)
 
-        self.chars[u'\u00a0'] = self.chars[u' ']
-        self.width[u'\u00a0'] = self.width[u' ']
-        self.advance[u'\u00a0'] = self.advance[u' ']
-        self.offsets[u'\u00a0'] = self.offsets[u' ']
+        self.chars['\u00a0'] = self.chars[' ']
+        self.width['\u00a0'] = self.width[' ']
+        self.advance['\u00a0'] = self.advance[' ']
+        self.offsets['\u00a0'] = self.offsets[' ']
 
         # The color key used to separate characters.
         i = 0
@@ -242,7 +242,7 @@ class MudgeFont(ImageFont):
             if char < 0:
                 continue
 
-            c = unichr(char)
+            c = chr(char)
             x = int(e.attrib["x"])
             y = int(e.attrib["y"])
             w = int(e.attrib["width"])
@@ -262,22 +262,22 @@ class MudgeFont(ImageFont):
         self.baseline = height  # W0201
 
         # Create space characters.
-        if u' ' not in self.chars:
-            self.chars[u' '] = renpy.display.pgrender.surface((self.spacewidth, height), True)
-            self.width[u' '] = self.spacewidth
-            self.advance[u' '] = self.spacewidth
-            self.offsets[u' '] = (0, 0)
+        if ' ' not in self.chars:
+            self.chars[' '] = renpy.display.pgrender.surface((self.spacewidth, height), True)
+            self.width[' '] = self.spacewidth
+            self.advance[' '] = self.spacewidth
+            self.offsets[' '] = (0, 0)
 
-        if u'\u00a0' not in self.chars:
-            self.chars[u'\u00a0'] = self.chars[u' ']
-            self.width[u'\u00a0'] = self.width[u' ']
-            self.advance[u'\u00a0'] = self.advance[u' ']
-            self.offsets[u'\u00a0'] = self.offsets[u' ']
+        if '\u00a0' not in self.chars:
+            self.chars['\u00a0'] = self.chars[' ']
+            self.width['\u00a0'] = self.width[' ']
+            self.advance['\u00a0'] = self.advance[' ']
+            self.offsets['\u00a0'] = self.offsets[' ']
 
-        self.chars[u'\u200b'] = renpy.display.pgrender.surface((0, height), True)
-        self.width[u'\u200b'] = 0
-        self.advance[u'\u200b'] = 0
-        self.offsets[u'\u200b'] = (0, 0)
+        self.chars['\u200b'] = renpy.display.pgrender.surface((0, height), True)
+        self.width['\u200b'] = 0
+        self.advance['\u200b'] = 0
+        self.offsets['\u200b'] = (0, 0)
 
 
 def parse_bmfont_line(l):
@@ -338,7 +338,7 @@ class BMFont(ImageFont):
             elif kind == "page":
                 pages[int(args["id"])] = renpy.display.im.Image(args["file"]).load(unscaled=True)
             elif kind == "char":
-                c = unichr(int(args["id"]))
+                c = chr(int(args["id"]))
                 x = int(args["x"])
                 y = int(args["y"])
                 w = int(args["width"])
@@ -358,16 +358,16 @@ class BMFont(ImageFont):
 
         f.close()
 
-        if u'\u00a0' not in self.chars:
-            self.chars[u'\u00a0'] = self.chars[u' ']
-            self.width[u'\u00a0'] = self.width[u' ']
-            self.advance[u'\u00a0'] = self.advance[u' ']
-            self.offsets[u'\u00a0'] = self.offsets[u' ']
+        if '\u00a0' not in self.chars:
+            self.chars['\u00a0'] = self.chars[' ']
+            self.width['\u00a0'] = self.width[' ']
+            self.advance['\u00a0'] = self.advance[' ']
+            self.offsets['\u00a0'] = self.offsets[' ']
 
-        self.chars[u'\u200b'] = renpy.display.pgrender.surface((0, self.height), True)
-        self.width[u'\u200b'] = 0
-        self.advance[u'\u200b'] = 0
-        self.offsets[u'\u200b'] = (0, 0)
+        self.chars['\u200b'] = renpy.display.pgrender.surface((0, self.height), True)
+        self.width['\u200b'] = 0
+        self.advance['\u200b'] = 0
+        self.offsets['\u200b'] = (0, 0)
 
 
 class ScaledImageFont(ImageFont):
@@ -384,14 +384,14 @@ class ScaledImageFont(ImageFont):
         self.baseline = scale(parent.baseline)
         self.default_kern = scale(parent.default_kern)
 
-        self.width = { k : scale(v) for k, v in parent.width.iteritems() }
-        self.advance = { k : scale(v) for k, v in parent.advance.iteritems() }
-        self.offsets = { k : (scale(v[0]), scale(v[1])) for k, v in parent.offsets.iteritems() }
-        self.kerns = { k : scale(v) for k, v in parent.kerns.iteritems() }
+        self.width = { k : scale(v) for k, v in iter(parent.width.items()) }
+        self.advance = { k : scale(v) for k, v in iter(parent.advance.items()) }
+        self.offsets = { k : (scale(v[0]), scale(v[1])) for k, v in iter(parent.offsets.items()) }
+        self.kerns = { k : scale(v) for k, v in iter(parent.kerns.items()) }
 
         self.chars = { }
 
-        for k, v in parent.chars.iteritems():
+        for k, v in parent.chars.items():
             w, h = v.get_size()
             nw = scale(w)
             nh = scale(h)
@@ -400,7 +400,7 @@ class ScaledImageFont(ImageFont):
 
 def register_sfont(name=None, size=None, bold=False, italics=False, underline=False,
                    filename=None, spacewidth=10, baseline=None, default_kern=0, kerns={},
-                   charset=u"!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"):
+                   charset="!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"):
     """
     :doc: image_fonts
 
@@ -589,9 +589,9 @@ def load_face(fn):
 
             pygame.sysfont.initsysfonts()
 
-            for v in pygame.sysfont.Sysfonts.itervalues():
+            for v in pygame.sysfont.Sysfonts.values():
                 if v is not None:
-                    for _flags, ffn in v.iteritems():
+                    for _flags, ffn in v.items():
                         for i in fonts:
                             if ffn.lower().endswith(i):
                                 font_file = file(ffn, "rb")
@@ -681,7 +681,7 @@ def free_memory():
 
 
 def load_fonts():
-    for i in image_fonts.itervalues():
+    for i in image_fonts.values():
         i.load()
 
     for i in renpy.config.preload_fonts:
