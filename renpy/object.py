@@ -80,7 +80,8 @@ class Sentinel(object):
         rv = sentinels.get(name, None)
 
         if rv is None:
-            rv = object.__new__(cls, name)
+            rv = object.__new__(cls)
+            rv.name = name
             sentinels[name] = rv
 
         return rv
