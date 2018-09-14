@@ -44,7 +44,7 @@ def renpy_pure(fn):
 
     name = fn
 
-    if not isinstance(name, basestring):
+    if not isinstance(name, str):
         name = fn.__name__
 
     pure("renpy." + name)
@@ -555,7 +555,7 @@ def predict_show(name, layer=None, what=None, tag=None, at_list=[ ]):
 
     if what is None:
         what = name
-    elif isinstance(what, basestring):
+    elif isinstance(what, str):
         what = tuple(what.split())
 
     if isinstance(what, renpy.display.core.Displayable):
@@ -655,7 +655,7 @@ def show(name, at_list=[ ], layer=None, what=None, zorder=None, tag=None, behind
 
     if what is None:
         what = name
-    elif isinstance(what, basestring):
+    elif isinstance(what, str):
         what = tuple(what.split())
 
     if isinstance(what, renpy.display.core.Displayable):
@@ -805,7 +805,7 @@ def input(prompt, default='', allow=None, exclude='{}', length=None, with_none=N
     renpy.exports.mode('input')
 
     roll_forward = renpy.exports.roll_forward_info()
-    if not isinstance(roll_forward, basestring):
+    if not isinstance(roll_forward, str):
         roll_forward = None
 
     # use previous data in rollback
@@ -1114,7 +1114,7 @@ class TagQuotingDict(object):
         if key in store:
             rv = store[key]
 
-            if isinstance(rv, (str, unicode)):
+            if isinstance(rv, str):
                 rv = rv.replace("{", "{{")
 
             return rv
@@ -1137,7 +1137,7 @@ def predict_say(who, what):
     if who is None:
         who = renpy.store.narrator  # E1101 @UndefinedVariable
 
-    if isinstance(who, (str, unicode)):
+    if isinstance(who, str):
         return renpy.store.predict_say(who, what)
 
     predict = getattr(who, 'predict', None)
@@ -1197,7 +1197,7 @@ def say(who, what, *args, **kwargs):
     if renpy.config.say_arguments_callback:
         args, kwargs = renpy.config.say_arguments_callback(who, *args, **kwargs)
 
-    if isinstance(who, (str, unicode)):
+    if isinstance(who, str):
         renpy.store.say(who, what, *args, **kwargs)
     else:
         who(what, *args, **kwargs)
@@ -2149,7 +2149,7 @@ def get_at_list(name, layer=None):
     If `layer` is None, uses the default layer for the given tag.
     """
 
-    if isinstance(name, basestring):
+    if isinstance(name, str):
         name = tuple(name.split())
 
     tag = name[0]
@@ -2598,7 +2598,7 @@ def expand_predict(d):
     Use the fnmatch function to expland `d` for the purposes of prediction.
     """
 
-    if not isinstance(d, basestring):
+    if not isinstance(d, str):
         return [ d ]
 
     if not "*" in d:
@@ -2879,7 +2879,7 @@ def variant(name):
     returns True if any of the variants is selected.
     """
 
-    if isinstance(name, basestring):
+    if isinstance(name, str):
         return name in renpy.config.variants
     else:
         for n in name:
@@ -3010,7 +3010,7 @@ def fsencode(s):
     Converts s from unicode to the filesystem encoding.
     """
 
-    if not isinstance(s, unicode):
+    if not isinstance(s, str):
         return s
 
     fsencoding = sys.getfilesystemencoding() or "utf-8"
@@ -3026,7 +3026,7 @@ def fsdecode(s):
     Converts s from filesystem encoding to unicode.
     """
 
-    if not isinstance(s, str):
+    if isinstance(s, str):
         return s
 
     fsencoding = sys.getfilesystemencoding() or "utf-8"
