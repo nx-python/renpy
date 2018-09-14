@@ -63,7 +63,7 @@ def take_name(name):
     if node is None:
         return
 
-    if isinstance(name, basestring):
+    if isinstance(name, str):
         labels.add(name)
 
 
