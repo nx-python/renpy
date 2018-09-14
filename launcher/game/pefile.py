@@ -85,8 +85,8 @@ IMAGE_OS2_SIGNATURE_LE          = 0x454C
 IMAGE_VXD_SIGNATURE             = 0x454C
 IMAGE_NT_SIGNATURE              = 0x00004550
 IMAGE_NUMBEROF_DIRECTORY_ENTRIES= 16
-IMAGE_ORDINAL_FLAG              = 0x80000000L
-IMAGE_ORDINAL_FLAG64            = 0x8000000000000000L
+IMAGE_ORDINAL_FLAG              = 0x80000000
+IMAGE_ORDINAL_FLAG64            = 0x8000000000000000
 OPTIONAL_HEADER_MAGIC_PE        = 0x10b
 OPTIONAL_HEADER_MAGIC_PE_PLUS   = 0x20b
 
@@ -169,7 +169,7 @@ section_characteristics = [
     ('IMAGE_SCN_MEM_SHARED',                0x10000000),
     ('IMAGE_SCN_MEM_EXECUTE',               0x20000000),
     ('IMAGE_SCN_MEM_READ',                  0x40000000),
-    ('IMAGE_SCN_MEM_WRITE',                 0x80000000L) ]
+    ('IMAGE_SCN_MEM_WRITE',                 0x80000000) ]
 
 SECTION_CHARACTERISTICS = dict([(e[1], e[0]) for e in
     section_characteristics]+section_characteristics)
@@ -576,7 +576,7 @@ class UnicodeStringWrapperPostProcessor:
 
         try:
             data = self.pe.get_data(self.rva_ptr, 2)
-        except PEFormatError, e:
+        except PEFormatError as e:
             return False
 
         if len(data)<2:
@@ -648,7 +648,7 @@ class Dump:
         The text can be indented with the optional argument 'indent'.
         """
 
-        if isinstance(txt, unicode):
+        if isinstance(txt, str):
             try:
                 txt = str(txt)
             except UnicodeEncodeError:
@@ -770,7 +770,7 @@ class Structure:
             self.__all_zeroes__ = True
 
         self.__unpacked_data_elms__ = struct.unpack(self.__format__, data)
-        for i in xrange(len(self.__unpacked_data_elms__)):
+        for i in range(len(self.__unpacked_data_elms__)):
             for key in self.__keys__[i]:
                 #self.values[key] = self.__unpacked_data_elms__[i]
                 setattr(self, key, self.__unpacked_data_elms__[i])
@@ -780,7 +780,7 @@ class Structure:
 
         new_values = []
 
-        for i in xrange(len(self.__unpacked_data_elms__)):
+        for i in range(len(self.__unpacked_data_elms__)):
 
             for key in self.__keys__[i]:
                 new_val = getattr(self, key)
@@ -816,15 +816,15 @@ class Structure:
             for key in keys:
 
                 val = getattr(self, key)
-                if isinstance(val, int) or isinstance(val, long):
+                if isinstance(val, int) or isinstance(val, int):
                     val_str = '0x%-8X' % (val)
                     if key == 'TimeDateStamp' or key == 'dwTimeStamp':
                         try:
                             val_str += ' [%s UTC]' % time.asctime(time.gmtime(val))
-                        except exceptions.ValueError, e:
+                        except exceptions.ValueError as e:
                             val_str += ' [INVALID TIME]'
                 else:
-                    val_str = ''.join(filter(lambda c:c != '\0', str(val)))
+                    val_str = ''.join([c for c in str(val) if c != '\0'])
 
                 dump.append('%-30s %s' % (key+':', val_str))
 
@@ -959,7 +959,7 @@ class DataContainer:
     """Generic data container."""
 
     def __init__(self, **args):
-        for key, value in args.items():
+        for key, value in list(args.items()):
             setattr(self, key, value)
 
 
@@ -1373,7 +1373,7 @@ class PE:
 
         try:
             structure.__unpack__(data)
-        except PEFormatError, err:
+        except PEFormatError as err:
             self.__warnings.append(
                 'Corrupt header "%s" at file offset %d. Exception: %s' % (
                     format[0], file_offset, str(err))  )
@@ -1557,7 +1557,7 @@ class PE:
                 'Normal values are never larger than 0x10, the value is: 0x%x' %
                 self.OPTIONAL_HEADER.NumberOfRvaAndSizes )
 
-        for i in xrange(int(0x7fffffffL & self.OPTIONAL_HEADER.NumberOfRvaAndSizes)):
+        for i in range(int(0x7fffffff & self.OPTIONAL_HEADER.NumberOfRvaAndSizes)):
 
             if len(self.__data__[offset:]) == 0:
                 break
@@ -1707,7 +1707,7 @@ class PE:
                 for entry in self.FileInfo:
                     if hasattr(entry, 'StringTable'):
                         for st_entry in entry.StringTable:
-                            for key, entry in st_entry.entries.items():
+                            for key, entry in list(st_entry.entries.items()):
 
                                 offsets = st_entry.entries_offsets[key]
                                 lengths = st_entry.entries_lengths[key]
@@ -1740,7 +1740,7 @@ class PE:
                                     file_data[
                                         offsets[1] + len(entry)*2 :
                                         offsets[1] + lengths[1]*2 ] = [
-                                            u'\0' ] * remainder*2
+                                            '\0' ] * remainder*2
 
         new_file_data = ''.join( [ chr(ord(c)) for c in file_data] )
 
@@ -1769,7 +1769,7 @@ class PE:
 
         self.sections = []
 
-        for i in xrange(self.FILE_HEADER.NumberOfSections):
+        for i in range(self.FILE_HEADER.NumberOfSections):
             section = SectionStructure(self.__IMAGE_SECTION_HEADER_format__)
             if not section:
                 break
@@ -1848,7 +1848,7 @@ class PE:
         matching the filter "flag_filter".
         """
 
-        return [(f[0], f[1]) for f in flag_dict.items() if
+        return [(f[0], f[1]) for f in list(flag_dict.items()) if
                 isinstance(f[0], str) and f[0].startswith(flag_filter)]
 
 
@@ -1958,7 +1958,7 @@ class PE:
             rva += bnd_descr.sizeof()
 
             forwarder_refs = []
-            for idx in xrange(bnd_descr.NumberOfModuleForwarderRefs):
+            for idx in range(bnd_descr.NumberOfModuleForwarderRefs):
                 # Both structures IMAGE_BOUND_IMPORT_DESCRIPTOR and
                 # IMAGE_BOUND_FORWARDER_REF have the same size.
                 bnd_frwd_ref = self.__unpack_data__(
@@ -2094,7 +2094,7 @@ class PE:
         data = self.get_data(data_rva, size)
 
         entries = []
-        for idx in xrange(len(data)/2):
+        for idx in range(len(data)/2):
             word = struct.unpack('<H', data[idx*2:(idx+1)*2])[0]
             reloc_type = (word>>12)
             reloc_offset = (word&0x0fff)
@@ -2112,10 +2112,10 @@ class PE:
         dbg_size = Structure(self.__IMAGE_DEBUG_DIRECTORY_format__).sizeof()
 
         debug = []
-        for idx in xrange(size/dbg_size):
+        for idx in range(size/dbg_size):
             try:
                 data = self.get_data(rva+dbg_size*idx, dbg_size)
-            except PEFormatError, e:
+            except PEFormatError as e:
                 self.__warnings.append(
                     'Invalid debug information. Can\'t read ' +
                     'data at RVA: 0x%x' % rva)
@@ -2169,7 +2169,7 @@ class PE:
             # If the RVA is invalid all would blow up. Some EXEs seem to be
             # specially nasty and have an invalid RVA.
             data = self.get_data(rva, Structure(self.__IMAGE_RESOURCE_DIRECTORY_format__).sizeof() )
-        except PEFormatError, e:
+        except PEFormatError as e:
             self.__warnings.append(
                 'Invalid resources directory. Can\'t read ' +
                 'directory data at RVA: 0x%x' % rva)
@@ -2203,7 +2203,7 @@ class PE:
 
         strings_to_postprocess = list()
 
-        for idx in xrange(number_of_entries):
+        for idx in range(number_of_entries):
 
             res = self.parse_resource_entry(rva)
             if res is None:
@@ -2229,7 +2229,7 @@ class PE:
                     entry_name = UnicodeStringWrapperPostProcessor(self, ustr_offset)
                     strings_to_postprocess.append(entry_name)
 
-                except PEFormatError, excp:
+                except PEFormatError as excp:
                     self.__warnings.append(
                         'Error parsing the resources directory, ' +
                         'attempting to read entry name. ' +
@@ -2330,7 +2330,7 @@ class PE:
             # If the RVA is invalid all would blow up. Some EXEs seem to be
             # specially nasty and have an invalid RVA.
             data = self.get_data(rva, Structure(self.__IMAGE_RESOURCE_DATA_ENTRY_format__).sizeof() )
-        except PEFormatError, excp:
+        except PEFormatError as excp:
             self.__warnings.append(
                 'Error parsing a resource directory data entry, ' +
                 'the RVA is invalid: 0x%x' % ( rva ) )
@@ -2355,13 +2355,13 @@ class PE:
             return None
 
         #resource.NameIsString = (resource.Name & 0x80000000L) >> 31
-        resource.NameOffset = resource.Name & 0x7FFFFFFFL
+        resource.NameOffset = resource.Name & 0x7FFFFFFF
 
-        resource.__pad = resource.Name & 0xFFFF0000L
-        resource.Id = resource.Name & 0x0000FFFFL
+        resource.__pad = resource.Name & 0xFFFF0000
+        resource.Id = resource.Name & 0x0000FFFF
 
-        resource.DataIsDirectory = (resource.OffsetToData & 0x80000000L) >> 31
-        resource.OffsetToDirectory = resource.OffsetToData & 0x7FFFFFFFL
+        resource.DataIsDirectory = (resource.OffsetToData & 0x80000000) >> 31
+        resource.OffsetToDirectory = resource.OffsetToData & 0x7FFFFFFF
 
         return resource
 
@@ -2409,7 +2409,7 @@ class PE:
         ustr_offset = version_struct.OffsetToData + versioninfo_struct.sizeof()
         try:
             versioninfo_string = self.get_string_u_at_rva( ustr_offset )
-        except PEFormatError, excp:
+        except PEFormatError as excp:
             self.__warnings.append(
                 'Error parsing the version information, ' +
                 'attempting to read VS_VERSION_INFO string. Can\'t ' +
@@ -2420,7 +2420,7 @@ class PE:
 
         # If the structure does not contain the expected name, it's assumed to be invalid
         #
-        if versioninfo_string != u'VS_VERSION_INFO':
+        if versioninfo_string != 'VS_VERSION_INFO':
 
             self.__warnings.append('Invalid VS_VERSION_INFO block')
             return
@@ -2489,7 +2489,7 @@ class PE:
                 stringfileinfo_offset + versioninfo_struct.sizeof() )
             try:
                 stringfileinfo_string = self.get_string_u_at_rva( ustr_offset )
-            except PEFormatError, excp:
+            except PEFormatError as excp:
                 self.__warnings.append(
                     'Error parsing the version information, ' +
                     'attempting to read StringFileInfo string. Can\'t ' +
@@ -2508,7 +2508,7 @@ class PE:
 
             # Parse a StringFileInfo entry
             #
-            if stringfileinfo_string.startswith(u'StringFileInfo'):
+            if stringfileinfo_string.startswith('StringFileInfo'):
 
                 if stringfileinfo_struct.Type == 1 and stringfileinfo_struct.ValueLength == 0:
 
@@ -2535,7 +2535,7 @@ class PE:
                             stringtable_struct.sizeof() )
                         try:
                             stringtable_string = self.get_string_u_at_rva( ustr_offset )
-                        except PEFormatError, excp:
+                        except PEFormatError as excp:
                             self.__warnings.append(
                                 'Error parsing the version information, ' +
                                 'attempting to read StringTable string. Can\'t ' +
@@ -2570,7 +2570,7 @@ class PE:
                             try:
                                 key = self.get_string_u_at_rva( ustr_offset )
                                 key_offset = self.get_offset_from_rva( ustr_offset )
-                            except PEFormatError, excp:
+                            except PEFormatError as excp:
                                 self.__warnings.append(
                                     'Error parsing the version information, ' +
                                     'attempting to read StringTable Key string. Can\'t ' +
@@ -2586,7 +2586,7 @@ class PE:
                                 value = self.get_string_u_at_rva( ustr_offset,
                                     max_length = string_struct.ValueLength )
                                 value_offset = self.get_offset_from_rva( ustr_offset )
-                            except PEFormatError, excp:
+                            except PEFormatError as excp:
                                 self.__warnings.append(
                                     'Error parsing the version information, ' +
                                     'attempting to read StringTable Value string. ' +
@@ -2631,7 +2631,7 @@ class PE:
 
             # Parse a VarFileInfo entry
             #
-            elif stringfileinfo_string.startswith( u'VarFileInfo' ):
+            elif stringfileinfo_string.startswith( 'VarFileInfo' ):
 
                 varfileinfo_struct = stringfileinfo_struct
                 varfileinfo_struct.name = 'VarFileInfo'
@@ -2661,7 +2661,7 @@ class PE:
                             var_struct.sizeof() )
                         try:
                             var_string = self.get_string_u_at_rva( ustr_offset )
-                        except PEFormatError, excp:
+                        except PEFormatError as excp:
                             self.__warnings.append(
                                 'Error parsing the version information, ' +
                                 'attempting to read VarFileInfo Var string. ' +
@@ -2683,7 +2683,7 @@ class PE:
                                 raw_data[varword_offset+2:varword_offset+4], 0)
                             varword_offset += 4
 
-                            if isinstance(word1, (int, long)) and isinstance(word1, (int, long)):
+                            if isinstance(word1, int) and isinstance(word1, int):
                                 var_struct.entry = {var_string: '0x%04x 0x%04x' % (word1, word2)}
 
                         var_offset = self.dword_align(
@@ -2752,7 +2752,7 @@ class PE:
 
         exports = []
 
-        for i in xrange(export_dir.NumberOfNames):
+        for i in range(export_dir.NumberOfNames):
 
 
             symbol_name = self.get_string_at_rva(
@@ -2789,7 +2789,7 @@ class PE:
 
         ordinals = [exp.ordinal for exp in exports]
 
-        for idx in xrange(export_dir.NumberOfFunctions):
+        for idx in range(export_dir.NumberOfFunctions):
 
             if not idx+export_dir.Base in ordinals:
                 symbol_address = self.get_dword_from_data(
@@ -2830,7 +2830,7 @@ class PE:
                 # If the RVA is invalid all would blow up. Some PEs seem to be
                 # specially nasty and have an invalid RVA.
                 data = self.get_data( rva, Structure(self.__IMAGE_DELAY_IMPORT_DESCRIPTOR_format__).sizeof() )
-            except PEFormatError, e:
+            except PEFormatError as e:
                 self.__warnings.append(
                     'Error parsing the Delay import directory at RVA: 0x%x' % ( rva ) )
                 break
@@ -2852,7 +2852,7 @@ class PE:
                     import_desc.pINT,
                     import_desc.pIAT,
                     None)
-            except PEFormatError, e:
+            except PEFormatError as e:
                 self.__warnings.append(
                     'Error parsing the Delay import directory. ' +
                     'Invalid import data at RVA: 0x%x' % ( rva ) )
@@ -2883,7 +2883,7 @@ class PE:
                 # If the RVA is invalid all would blow up. Some EXEs seem to be
                 # specially nasty and have an invalid RVA.
                 data = self.get_data(rva, Structure(self.__IMAGE_IMPORT_DESCRIPTOR_format__).sizeof() )
-            except PEFormatError, e:
+            except PEFormatError as e:
                 self.__warnings.append(
                     'Error parsing the Import directory at RVA: 0x%x' % ( rva ) )
                 break
@@ -2903,7 +2903,7 @@ class PE:
                     import_desc.OriginalFirstThunk,
                     import_desc.FirstThunk,
                     import_desc.ForwarderChain)
-            except PEFormatError, excp:
+            except PEFormatError as excp:
                 self.__warnings.append(
                     'Error parsing the Import directory. ' +
                     'Invalid Import data at RVA: 0x%x' % ( rva ) )
@@ -2936,7 +2936,7 @@ class PE:
         imported_symbols = []
         imports_section = self.get_section_by_rva(first_thunk)
         if not imports_section:
-            raise PEFormatError, 'Invalid/corrupt imports.'
+            raise PEFormatError('Invalid/corrupt imports.')
 
 
         # Import Lookup Table. Contains ordinals or pointers to strings.
@@ -2963,7 +2963,7 @@ class PE:
             return None
 
 
-        for idx in xrange(len(table)):
+        for idx in range(len(table)):
 
             imp_ord = None
             imp_hint = None
@@ -2991,7 +2991,7 @@ class PE:
                         # Get the Hint
                         imp_hint = self.get_word_from_data(data, 0)
                         imp_name = self.get_string_at_rva(table[idx].AddressOfData+2)
-                    except PEFormatError, e:
+                    except PEFormatError as e:
                         pass
 
             imp_address = first_thunk+self.OPTIONAL_HEADER.ImageBase+idx*4
@@ -3032,7 +3032,7 @@ class PE:
 
             try:
                 data = self.get_data( rva, Structure(format).sizeof() )
-            except PEFormatError, e:
+            except PEFormatError as e:
                 self.__warnings.append(
                     'Error parsing the import table. ' +
                     'Invalid data at RVA: 0x%x' % ( rva ) )
@@ -3137,7 +3137,7 @@ class PE:
                     end = None
                 return self.header[rva:end]
 
-            raise PEFormatError, 'data at RVA can\'t be fetched. Corrupt header?'
+            raise PEFormatError('data at RVA can\'t be fetched. Corrupt header?')
 
         return s.get_data(rva, length)
 
@@ -3160,7 +3160,7 @@ class PE:
         s = self.get_section_by_rva(rva)
         if not s:
 
-            raise PEFormatError, 'data at RVA can\'t be fetched. Corrupt header?'
+            raise PEFormatError('data at RVA can\'t be fetched. Corrupt header?')
 
         return s.get_offset_from_rva(rva)
 
@@ -3207,21 +3207,21 @@ class PE:
             # If the RVA is invalid all would blow up. Some EXEs seem to be
             # specially nasty and have an invalid RVA.
             self.get_data(rva, 2)
-        except PEFormatError, e:
+        except PEFormatError as e:
             return None
 
         #length = struct.unpack('<H', data)[0]
 
-        s = u''
-        for idx in xrange(max_length):
+        s = ''
+        for idx in range(max_length):
             try:
                 uchr = struct.unpack('<H', self.get_data(rva+2*idx, 2))[0]
             except struct.error:
                 break
 
-            if unichr(uchr) == u'\0':
+            if chr(uchr) == '\0':
                 break
-            s += unichr(uchr)
+            s += chr(uchr)
 
         return s
 
@@ -3336,7 +3336,7 @@ class PE:
             hasattr(self.OPTIONAL_HEADER, 'DATA_DIRECTORY') ):
 
             dump.add_header('Directories')
-            for idx in xrange(len(self.OPTIONAL_HEADER.DATA_DIRECTORY)):
+            for idx in range(len(self.OPTIONAL_HEADER.DATA_DIRECTORY)):
                 directory = self.OPTIONAL_HEADER.DATA_DIRECTORY[idx]
                 dump.add_lines(directory.dump())
             dump.add_newline()
@@ -3370,7 +3370,7 @@ class PE:
                             [dump.add_line('  '+line) for line in st_entry.dump()]
                             dump.add_line('  LangID: '+st_entry.LangID)
                             dump.add_newline()
-                            for str_entry in st_entry.entries.items():
+                            for str_entry in list(st_entry.entries.items()):
                                 dump.add_line( '    ' +
                                     convert_to_printable(str_entry[0]) + ': ' +
                                     convert_to_printable(str_entry[1]) )
@@ -3382,8 +3382,8 @@ class PE:
                                 [dump.add_line('  '+line) for line in var_entry.dump()]
                                 dump.add_line(
                                     '    ' +
-                                    convert_to_printable(var_entry.entry.keys()[0]) +
-                                    ': ' + var_entry.entry.values()[0])
+                                    convert_to_printable(list(var_entry.entry.keys())[0]) +
+                                    ': ' + list(var_entry.entry.values())[0])
 
                         dump.add_newline()
 

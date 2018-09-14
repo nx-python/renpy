@@ -66,9 +66,9 @@ class BinFile(object):
     def name(self):
         c = self.u16()
 
-        rv = u""
+        rv = ""
         for _i in range(c):
-            rv += unichr(self.u16())
+            rv += chr(self.u16())
 
         return rv
 
@@ -210,8 +210,8 @@ class Packer(object):
         return rv
 
     def pack_dict(self, d, offset):
-        name_entries = sorted((a, b) for a, b in d.iteritems() if isinstance(a, unicode))
-        id_entries = sorted((a, b) for a, b in d.iteritems() if isinstance(a, int))
+        name_entries = sorted((a, b) for a, b in iter(d.items()) if isinstance(a, str))
+        id_entries = sorted((a, b) for a, b in iter(d.items()) if isinstance(a, int))
 
         rv = struct.pack("<IIHHHH", 0, 0, 4, 0, len(name_entries), len(id_entries))
 
@@ -220,7 +220,7 @@ class Packer(object):
         rest = b""
 
         for (name, value) in name_entries + id_entries:
-            if isinstance(name, unicode):
+            if isinstance(name, str):
                 name = 0x80000000 | self.pack_name(name)
 
             if isinstance(value, dict):

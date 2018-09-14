@@ -607,7 +607,7 @@ def AskFileForOpen(
     ofn.lpstrTitle = windowTitle
     ofn.lpstrInitialDir = defaultLocation
 
-    if typeList and filter(None, typeList):
+    if typeList and [_f for _f in typeList if _f]:
         lpstrFilter = ''
         for typeSpec in typeList:
             try:
@@ -673,10 +673,10 @@ def AskFileForOpen(
     ofn.lpfnHook = LPOFNHOOKPROC(hookProc)
 
     if fn(ctypes.byref(ofn)):
-        filenames = filter(None, filename.split('\0'))
+        filenames = [_f for _f in filename.split('\0') if _f]
         if len(filenames) > 1:
             dir, filenames = filenames[0], filenames[1:]
-            return map(lambda fn: os.path.join(dir, fn), filenames)
+            return [os.path.join(dir, fn) for fn in filenames]
         elif multiple:
             return filenames
         else:
@@ -772,7 +772,7 @@ def AskFolder(
     def BrowseCallback(hwnd, uMsg, lParam, lpData):
         if uMsg == BFFM_INITIALIZED:
             if actionButtonLabel:
-                label = unicode(actionButtonLabel, errors='replace')
+                label = str(actionButtonLabel, errors='replace')
                 user32.SendMessageW(hwnd, BFFM_SETOKTEXT, 0, label)
             if cancelButtonLabel:
                 cancelButton = user32.GetDlgItem(hwnd, IDCANCEL)
@@ -996,14 +996,14 @@ def GetArgv(optionlist=None, commandlist=None, addoldfile=1, addnewfile=1, addfo
             if item[0] == '"':
                 while item[-1] != '"':
                     if not tmplist:
-                        raise RuntimeError, "Unterminated quoted argument"
+                        raise RuntimeError("Unterminated quoted argument")
                     item = item + ' ' + tmplist[0]
                     del tmplist[0]
                 item = item[1:-1]
             if item[0] == "'":
                 while item[-1] != "'":
                     if not tmplist:
-                        raise RuntimeError, "Unterminated quoted argument"
+                        raise RuntimeError("Unterminated quoted argument")
                     item = item + ' ' + tmplist[0]
                     del tmplist[0]
                 item = item[1:-1]
@@ -1054,11 +1054,11 @@ def test():
     try:
         if hasattr(MacOS, 'SchedParams'):
             appsw = MacOS.SchedParams(1, 0)
-        for i in xrange(20):
+        for i in range(20):
             bar.inc()
             time.sleep(0.05)
         bar.set(0,100)
-        for i in xrange(100):
+        for i in range(100):
             bar.set(i)
             time.sleep(0.05)
             if i % 10 == 0:

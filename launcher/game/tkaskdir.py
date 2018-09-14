@@ -31,8 +31,8 @@ try:
     from tkinter import Tk
     from tkinter.filedialog import askdirectory
 except ImportError:
-    from Tkinter import Tk
-    from tkFileDialog import askdirectory
+    from tkinter import Tk
+    from tkinter.filedialog import askdirectory
 
 # Binary mode stdout for python3.
 try:
