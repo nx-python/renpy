@@ -107,7 +107,7 @@ class ParameterInfo(object):
 
         extrapos = tuple(args[len(self.positional):])
 
-        for name, value in kwargs.iteritems():
+        for name, value in kwargs.items():
             if name in values:
                 if not ignore_errors:
                     raise Exception("Parameter %s has two values." % name)
@@ -138,7 +138,7 @@ class ParameterInfo(object):
         if self.extrakw:
             rv[self.extrakw] = values
         elif values and not ignore_errors:
-            raise Exception("Unknown keyword arguments: %s" % ( ", ".join(values.keys())))
+            raise Exception("Unknown keyword arguments: %s" % ( ", ".join(list(values.keys()))))
 
         return rv
 
@@ -222,7 +222,7 @@ def __newobj__(cls, *args):
 pyexpr_list = [ ]
 
 
-class PyExpr(unicode):
+class PyExpr(str):
     """
     Represents a string containing python code.
     """
@@ -233,7 +233,7 @@ class PyExpr(unicode):
         ]
 
     def __new__(cls, s, filename, linenumber):
-        self = unicode.__new__(cls, s)
+        self = str.__new__(cls, s)
         self.filename = filename
         self.linenumber = linenumber
 
@@ -244,7 +244,7 @@ class PyExpr(unicode):
         return self
 
     def __getnewargs__(self):
-        return (unicode(self), self.filename, self.linenumber)  # E1101
+        return (str(self), self.filename, self.linenumber)  # E1101
 
 
 class PyCode(object):
@@ -655,7 +655,7 @@ class Say(Node):
             if not (
                     (who is None) or
                     callable(who) or
-                    isinstance(who, basestring) ):
+                    isinstance(who, str) ):
 
                 raise Exception("Sayer %s is not a function or string." % self.who.encode("utf-8"))
 
@@ -825,7 +825,7 @@ class Label(Node):
 
         values = apply_arguments(self.parameters, renpy.store._args, renpy.store._kwargs)
 
-        for k, v in values.iteritems():
+        for k, v in values.items():
             renpy.exports.dynamic(k)
             setattr(renpy.store, k, v)
 
@@ -2411,7 +2411,7 @@ class Style(Node):
         if self.properties:
             properties = { }
 
-            for name, expr in self.properties.items():
+            for name, expr in list(self.properties.items()):
 
                 value = renpy.python.py_eval(expr)
 
