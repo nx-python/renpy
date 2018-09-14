@@ -28,7 +28,7 @@ import os
 import copy
 import types
 import threading
-import cPickle
+import pickle
 
 ################################################################################
 # Version information
@@ -220,14 +220,14 @@ class Backup():
         if mobile:
             return
 
-        for m in sys.modules.values():
+        for m in list(sys.modules.values()):
             if m is None:
                 continue
 
             self.backup_module(m)
 
         # A pickled version of self.objects.
-        self.objects_pickle = cPickle.dumps(self.objects, cPickle.HIGHEST_PROTOCOL)
+        self.objects_pickle = pickle.dumps(self.objects, pickle.HIGHEST_PROTOCOL)
 
         self.objects = None
 
@@ -252,7 +252,7 @@ class Backup():
 
         self.names[mod] = set(vars(mod).keys())
 
-        for k, v in vars(mod).iteritems():
+        for k, v in vars(mod).items():
 
             if k.startswith("__") and k.endswith("__"):
                 continue
@@ -271,10 +271,10 @@ class Backup():
             # If we have a problem pickling things, uncomment the next block.
 
             try:
-                cPickle.dumps(v, cPickle.HIGHEST_PROTOCOL)
+                pickle.dumps(v, pickle.HIGHEST_PROTOCOL)
             except:
                 print("Cannot pickle", name + "." + k, "=", repr(v))
-                print("Reduce Ex is:", repr(v.__reduce_ex__(cPickle.HIGHEST_PROTOCOL)))
+                print("Reduce Ex is:", repr(v.__reduce_ex__(pickle.HIGHEST_PROTOCOL)))
 
     def restore(self):
         """
@@ -286,14 +286,14 @@ class Backup():
             return
 
         # Remove new variables from the module.
-        for mod, names in self.names.iteritems():
+        for mod, names in self.names.items():
             modvars = vars(mod)
             for name in set(modvars.keys()) - names:
                 del modvars[name]
 
-        objects = cPickle.loads(self.objects_pickle)
+        objects = pickle.loads(self.objects_pickle)
 
-        for k, v in self.variables.iteritems():
+        for k, v in self.variables.items():
             mod, field = k
             setattr(mod, field, objects[v])
 
@@ -531,14 +531,14 @@ def post_import():
     import subprocess
     sys.modules['renpy.subprocess'] = subprocess
 
-    for k, v in renpy.defaultstore.__dict__.iteritems():
+    for k, v in renpy.defaultstore.__dict__.items():
         renpy.store.__dict__.setdefault(k, v)
 
     renpy.store.eval = renpy.defaultstore.eval
 
     # Import everything into renpy.exports, provided it isn't
     # already there.
-    for k, v in globals().iteritems():
+    for k, v in globals().items():
         vars(renpy.exports).setdefault(k, v)
 
 
@@ -581,7 +581,7 @@ def reload_all():
     py_compile_cache = renpy.python.py_compile_cache
 
     # Delete the store modules.
-    for i in sys.modules.keys():
+    for i in list(sys.modules.keys()):
         if i.startswith("store") or i == "renpy.store":
             m = sys.modules[i]
 
