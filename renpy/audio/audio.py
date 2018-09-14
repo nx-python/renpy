@@ -1012,7 +1012,7 @@ def periodic():
             exc = periodic_exc
             periodic_exc = None
 
-            raise exc[0], exc[1], exc[2]
+            raise exc[0](exc[1]).with_traceback(exc[2])
 
         run_periodic = True
         periodic_condition.notify()
