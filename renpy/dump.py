@@ -123,14 +123,14 @@ def dump(error):
     # Labels.
     label = location["label"] = { }
 
-    for name, n in renpy.game.script.namemap.iteritems():
+    for name, n in renpy.game.script.namemap.items():
         filename = n.filename
         line = n.linenumber
 
-        if not isinstance(name, basestring):
+        if not isinstance(name, str):
             continue
 
-        if not filter(name, filename):
+        if not list(filter(name, filename)):
             continue
 
         label[name] = [ filename, line ]
@@ -139,7 +139,7 @@ def dump(error):
     define = location["define"] = { }
 
     for name, filename, line in definitions:
-        if not filter(name, filename):
+        if not list(filter(name, filename)):
             continue
 
         define[name] = [ filename, line ]
@@ -148,7 +148,7 @@ def dump(error):
     screen = location["screen"] = { }
 
     for name, filename, line in screens:
-        if not filter(name, filename):
+        if not list(filter(name, filename)):
             continue
 
         screen[name] = [ filename, line ]
@@ -157,7 +157,7 @@ def dump(error):
     transform = location["transform"] = { }
 
     for name, filename, line in transforms:
-        if not filter(name, filename):
+        if not list(filter(name, filename)):
             continue
 
         transform[name] = [ filename, line ]
@@ -174,16 +174,16 @@ def dump(error):
         """
 
         if inspect.isfunction(o):
-            return inspect.getfile(o), o.func_code.co_firstlineno
+            return inspect.getfile(o), o.__code__.co_firstlineno
 
         if inspect.ismethod(o):
-            return get_line(o.im_func)
+            return get_line(o.__func__)
 
         return None, None
 
     code = location["callable"] = { }
 
-    for modname, mod in sys.modules.items():
+    for modname, mod in list(sys.modules.items()):
 
         if mod is None:
             continue
@@ -195,7 +195,7 @@ def dump(error):
         else:
             continue
 
-        for name, o in mod.__dict__.items():
+        for name, o in list(mod.__dict__.items()):
 
             if inspect.isfunction(o):
                 try:
@@ -207,7 +207,7 @@ def dump(error):
                     if filename is None:
                         continue
 
-                    if not filter(name, filename):
+                    if not list(filter(name, filename)):
                         continue
 
                     code[prefix + name] = [ filename, line ]
@@ -216,7 +216,7 @@ def dump(error):
 
             if inspect.isclass(o):
 
-                for methname, method in o.__dict__.iteritems():
+                for methname, method in o.__dict__.items():
 
                     try:
                         if inspect.getmodule(method) != mod:
@@ -227,10 +227,10 @@ def dump(error):
                         if filename is None:
                             continue
 
-                        if not filter(name, filename):
+                        if not list(filter(name, filename)):
                             continue
 
-                        if not filter(methname, filename):
+                        if not list(filter(methname, filename)):
                             continue
 
                         code[prefix + name + "." + methname] = [ filename, line ]

@@ -327,7 +327,7 @@ def down(node, keysym):
     if pygame_sdl2.key.text_input:
         pygame_sdl2.event.post(pygame_sdl2.event.Event(
             pygame_sdl2.KEYDOWN,
-            unicode='',
+            str='',
             key=code,
             scancode=code,
             mod=mods,
@@ -343,7 +343,7 @@ def down(node, keysym):
 
         pygame_sdl2.event.post(pygame_sdl2.event.Event(
             pygame_sdl2.KEYDOWN,
-            unicode=u,
+            str=u,
             key=code,
             scancode=code,
             mod=mods,

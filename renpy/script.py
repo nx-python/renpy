@@ -34,7 +34,7 @@ import marshal
 import struct
 import zlib
 
-from cPickle import loads, dumps
+from pickle import loads, dumps
 import shutil
 
 # The version of the dumped script.
@@ -415,7 +415,7 @@ class Script(object):
                     bad_node = node
                     old_node = self.namemap[name]
 
-                    if not isinstance(bad_name, basestring):
+                    if not isinstance(bad_name, str):
 
                         raise ScriptError("Name %s is defined twice, at %s:%d and %s:%d." %
                                           (repr(bad_name),
@@ -424,7 +424,7 @@ class Script(object):
 
                     else:
                         self.duplicate_labels.append(
-                            u'The label {} is defined twice, at\n  File "{}", line {} and\n  File "{}", line {}.'.format(
+                            'The label {} is defined twice, at\n  File "{}", line {} and\n  File "{}", line {}.'.format(
                                 bad_name, old_node.filename, old_node.linenumber, bad_node.filename, bad_node.linenumber))
 
                 # Add twice, so we can find duplicates in the same file.

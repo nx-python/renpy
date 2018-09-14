@@ -23,10 +23,11 @@
 
 from __future__ import print_function
 
-import pickle
-import cPickle
 
-from cStringIO import StringIO
+import pickle
+import pickle
+
+from io import StringIO
 
 import zipfile
 import re
@@ -45,21 +46,21 @@ from json import dumps as json_dumps
 
 def dump(o, f):
     if renpy.config.use_cpickle:
-        cPickle.dump(o, f, cPickle.HIGHEST_PROTOCOL)
+        pickle.dump(o, f, pickle.HIGHEST_PROTOCOL)
     else:
         pickle.dump(o, f, pickle.HIGHEST_PROTOCOL)
 
 
 def dumps(o):
     if renpy.config.use_cpickle:
-        return cPickle.dumps(o, cPickle.HIGHEST_PROTOCOL)
+        return pickle.dumps(o, pickle.HIGHEST_PROTOCOL)
     else:
         return pickle.dumps(o, pickle.HIGHEST_PROTOCOL)
 
 
 def loads(s):
     if renpy.config.use_cpickle:
-        return cPickle.loads(s)
+        return pickle.loads(s)
     else:
         return pickle.loads(s)
 
@@ -85,10 +86,10 @@ def save_dump(roots, log):
             f.write("{0: 7d} {1} = alias {2}\n".format(0, path, o_repr_cache[ido]))
             return 0
 
-        if isinstance(o, (int, float, types.NoneType, types.ModuleType, types.ClassType)):
+        if isinstance(o, (int, float, type(None), types.ModuleType, type)):
             o_repr = repr(o)
 
-        elif isinstance(o, (str, unicode)):
+        elif isinstance(o, str):
             if len(o) <= 80:
                 o_repr = repr(o).encode("utf-8")
             else:
@@ -101,7 +102,7 @@ def save_dump(roots, log):
             o_repr = "<" + o.__class__.__name__ + ">"
 
         elif isinstance(o, types.MethodType):
-            o_repr = "<method {0}.{1}>".format(o.im_class.__name__, o.im_func.__name__)
+            o_repr = "<method {0}.{1}>".format(o.__self__.__class__.__name__, o.__func__.__name__)
 
         elif isinstance(o, object):
             o_repr = "<{0}>".format(type(o).__name__)
@@ -111,10 +112,10 @@ def save_dump(roots, log):
 
         o_repr_cache[ido] = o_repr
 
-        if isinstance(o, (int, float, types.NoneType, types.ModuleType, types.ClassType)):
+        if isinstance(o, (int, float, type(None), types.ModuleType, type)):
             size = 1
 
-        elif isinstance(o, (str, unicode)):
+        elif isinstance(o, str):
             size = len(o) / 40 + 1
 
         elif isinstance(o, (tuple, list)):
@@ -125,12 +126,12 @@ def save_dump(roots, log):
 
         elif isinstance(o, dict):
             size = 2
-            for k, v in o.iteritems():
+            for k, v in o.items():
                 size += 2
                 size += visit(v, "{0}[{1!r}]".format(path, k))
 
         elif isinstance(o, types.MethodType):
-            size = 1 + visit(o.im_self, path + ".im_self")
+            size = 1 + visit(o.__self__, path + ".im_self")
 
         else:
 
@@ -154,7 +155,7 @@ def save_dump(roots, log):
 
             state = get(2, { })
             if isinstance(state, dict):
-                for k, v in state.iteritems():
+                for k, v in state.items():
                     size += 2
                     size += visit(v, path + "." + k)
             else:
@@ -201,7 +202,7 @@ def find_bad_reduction(roots, log):
 
         seen.add(ido)
 
-        if isinstance(o, (int, float, types.NoneType, types.ClassType)):
+        if isinstance(o, (int, float, type(None), type)):
             return
 
         if isinstance(o, (tuple, list)):
@@ -211,13 +212,13 @@ def find_bad_reduction(roots, log):
                     return rv
 
         elif isinstance(o, dict):
-            for k, v in o.iteritems():
+            for k, v in o.items():
                 rv = visit(v, "{0}[{1!r}]".format(path, k))
                 if rv is not None:
                     return rv
 
         elif isinstance(o, types.MethodType):
-            return visit(o.im_self, path + ".im_self")
+            return visit(o.__self__, path + ".im_self")
 
         elif isinstance(o, types.ModuleType):
 
@@ -249,7 +250,7 @@ def find_bad_reduction(roots, log):
 
             state = get(2, { })
             if isinstance(state, dict):
-                for k, v in state.iteritems():
+                for k, v in state.items():
                     rv = visit(v, path + "." + k)
                     if rv is not None:
                         return rv
@@ -276,7 +277,7 @@ def find_bad_reduction(roots, log):
 
         return None
 
-    for k, v in roots.items():
+    for k, v in list(roots.items()):
         rv = visit(v, k)
         if rv is not None:
             return rv
@@ -407,18 +408,18 @@ def save(slotname, extra_info='', mutate_flag=False):
         t, e, tb = sys.exc_info()
 
         if mutate_flag:
-            raise t, e, tb
+            raise t(e).with_traceback(tb)
 
         try:
             bad = find_bad_reduction(roots, renpy.game.log)
         except:
-            raise t, e, tb
+            raise t(e).with_traceback(tb)
 
         if bad is None:
-            raise t, e, tb
+            raise t(e).with_traceback(tb)
 
         e.args = ( e.args[0] + ' (perhaps {})'.format(bad), ) + e.args[1:]
-        raise t, e, tb
+        raise t(e).with_traceback(tb)
 
     if mutate_flag and renpy.python.mutate_flag:
         raise SaveAbort()
@@ -879,7 +880,7 @@ def clear_cache():
     Clears the entire cache.
     """
 
-    for c in cache.values():
+    for c in list(cache.values()):
         c.clear()
 
     newest_slot_cache.clear()

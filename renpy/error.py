@@ -45,8 +45,8 @@ def write_utf8_traceback_list(out, l):
     for filename, line, what, text in l:
 
         # Filename is either unicode or an fsecoded string.
-        if not isinstance(filename, unicode):
-            filename = unicode(filename, FSENCODING, "replace")
+        if not isinstance(filename, str):
+            filename = str(filename, FSENCODING, "replace")
 
         # Line is a number.
 
@@ -169,7 +169,7 @@ def report_exception(e, editor=True):
 
     def safe_utf8(e):
         try:
-            m = unicode(e)
+            m = str(e)
         except:
             try:
                 if len(e.args) == 0:
@@ -184,14 +184,14 @@ def report_exception(e, editor=True):
                 except:
                     m = "<Could not encode exception.>"
 
-        if isinstance(m, unicode):
+        if isinstance(m, str):
             return m.encode("utf-8", "replace")
         else:
             return m
 
     # Return values - which can be displayed to the user.
-    simple = cStringIO.StringIO()
-    full = cStringIO.StringIO()
+    simple = io.StringIO()
+    full = io.StringIO()
 
     full_tl = traceback_list(tb)
     simple_tl = filter_traceback_list(full_tl)

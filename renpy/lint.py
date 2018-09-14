@@ -29,9 +29,9 @@ import sys
 import collections
 import textwrap
 
-import __builtin__
+import builtins
 
-python_builtins = set(dir(__builtin__))
+python_builtins = set(dir(builtins))
 renpy_builtins = set()
 
 image_prefixes = None
@@ -56,7 +56,7 @@ report_node = None
 
 def report(msg, *args):
     if report_node:
-        out = u"%s:%d " % (renpy.parser.unicode_filename(report_node.filename), report_node.linenumber)
+        out = "%s:%d " % (renpy.parser.unicode_filename(report_node.filename), report_node.linenumber)
     else:
         out = ""
 
@@ -74,7 +74,7 @@ added = { }
 def add(msg):
     if not msg in added:
         added[msg] = True
-        print(unicode(msg).encode('utf-8'))
+        print(str(msg).encode('utf-8'))
 
 
 # Trys to evaluate an expression, announcing an error if it fails.
@@ -527,7 +527,7 @@ def check_style_property_displayable(name, property, d):
 def check_style(name, s):
 
     for p in s.properties:
-        for k, v in p.iteritems():
+        for k, v in p.items():
 
             # Treat font specially.
             if k.endswith("font"):
@@ -562,7 +562,7 @@ def check_label(node):
 
 
 def check_styles():
-    for full_name, s in renpy.style.styles.iteritems():  # @UndefinedVariable
+    for full_name, s in renpy.style.styles.items():  # @UndefinedVariable
         name = "style." + full_name[0]
         for i in full_name[1:]:
             name += "[{!r}]".format(i)
@@ -652,7 +652,7 @@ def lint():
     renpy.game.lint = True
 
     print(codecs.BOM_UTF8)
-    print(unicode(renpy.version + " lint report, generated at: " + time.ctime()).encode("utf-8"))
+    print(str(renpy.version + " lint report, generated at: " + time.ctime()).encode("utf-8"))
 
     # This supports check_hide.
     global image_prefixes

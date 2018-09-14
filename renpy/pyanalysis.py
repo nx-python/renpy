@@ -31,7 +31,7 @@ from renpy.python import py_compile
 import ast
 
 import zlib
-from cPickle import loads, dumps
+from pickle import loads, dumps
 
 # The set of names that should be treated as constants.
 always_constants = { 'True', 'False', 'None' }
@@ -147,7 +147,7 @@ def pure(fn):
 
     name = fn
 
-    if not isinstance(name, basestring):
+    if not isinstance(name, str):
         name = fn.__name__
 
     if name not in not_constants:
@@ -318,7 +318,7 @@ class Analysis(object):
         not changed since the last time we called this function.
         """
 
-        for i in self.children.values():
+        for i in list(self.children.values()):
             if not i.at_fixed_point():
                 return False
 

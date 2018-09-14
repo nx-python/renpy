@@ -25,14 +25,14 @@
 from __future__ import print_function
 
 import renpy
-import __builtin__
+import builtins
 import threading
 import datetime
 import traceback
 import os
 
-real_open = __builtin__.open
-__builtin__.real_file = __builtin__.file
+real_open = builtins.open
+builtins.real_file = builtins.open
 
 report = True
 
@@ -69,5 +69,5 @@ def init_main_thread_open():
     if not "RENPY_DEBUG_MAIN_THREAD_OPEN" in os.environ:
         return
 
-    __builtin__.open = replacement_open
-    __builtin__.file = replacement_open
+    builtins.open = replacement_open
+    builtins.file = replacement_open

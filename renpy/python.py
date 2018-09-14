@@ -164,7 +164,7 @@ def begin_stores():
     Calls .begin on every store dict.
     """
 
-    for sd in store_dicts.itervalues():
+    for sd in store_dicts.values():
         sd.begin()
 
 
@@ -208,7 +208,7 @@ def create_store(name):
     # Set up the default contents of the store.
     eval("1", d)
 
-    for k, v in renpy.minstore.__dict__.iteritems():
+    for k, v in renpy.minstore.__dict__.items():
         if k not in d:
             d[k] = v
 
@@ -277,7 +277,7 @@ def make_clean_stores():
 
     global clean_store_backup
 
-    for _k, v in store_dicts.iteritems():
+    for _k, v in store_dicts.items():
 
         v.ever_been_changed.clear()
         v.begin()
@@ -364,14 +364,14 @@ def reached(obj, reachable, wait):
 
     try:
         # Treat as fields, indexed by strings.
-        for v in vars(obj).itervalues():
+        for v in vars(obj).values():
             reached(v, reachable, wait)
     except:
         pass
 
     try:
         # Treat as iterable
-        if not isinstance(obj, basestring):
+        if not isinstance(obj, str):
             for v in obj.__iter__():
                 reached(v, reachable, wait)
     except:
@@ -379,7 +379,7 @@ def reached(obj, reachable, wait):
 
     try:
         # Treat as dict.
-        for v in obj.itervalues():
+        for v in obj.values():
             reached(v, reachable, wait)
     except:
         pass
@@ -397,14 +397,14 @@ def reached_vars(store, reachable, wait):
     the path by which the object was reached.
     """
 
-    for v in store.itervalues():
+    for v in store.values():
         reached(v, reachable, wait)
 
     for c in renpy.game.contexts:
         reached(c.info, reachable, wait)
         reached(c.music, reachable, wait)
         for d in c.dynamic_stack:
-            for v in d.itervalues():
+            for v in d.values():
                 reached(v, reachable, wait)
 
 
@@ -514,7 +514,7 @@ _execute_python_hide()
     tree.body = hide.body
 
 
-unicode_re = re.compile(ur'[\u0080-\uffff]')
+unicode_re = re.compile(r'[\u0080-\uffff]')
 
 
 def unicode_sub(m):
@@ -606,7 +606,7 @@ def py_compile(source, mode, filename='<none>', lineno=1, ast_node=False, cache=
         lineno = source.linenumber
 
     if cache:
-        key = (lineno, filename, unicode(source), mode, renpy.script.MAGIC)
+        key = (lineno, filename, str(source), mode, renpy.script.MAGIC)
 
         rv = py_compile_cache.get(key, None)
         if rv is not None:
@@ -625,7 +625,7 @@ def py_compile(source, mode, filename='<none>', lineno=1, ast_node=False, cache=
             py_compile_cache[key] = rv
             return rv
 
-    source = unicode(source)
+    source = str(source)
     source = source.replace("\r", "")
     source = escape_unicode(source)
 
@@ -666,7 +666,7 @@ def py_compile(source, mode, filename='<none>', lineno=1, ast_node=False, cache=
 
         return rv
 
-    except SyntaxError, e:
+    except SyntaxError as e:
 
         if e.lineno is not None:
             e.lineno += line_offset
@@ -868,7 +868,7 @@ class RevertableList(list):
 
 
 def revertable_range(*args):
-    return RevertableList(range(*args))
+    return RevertableList(list(range(*args)))
 
 
 def revertable_sorted(*args, **kwargs):
@@ -911,7 +911,7 @@ class RevertableDict(dict):
         return rv
 
     def _clean(self):
-        return self.items()
+        return list(self.items())
 
     def _compress(self, clean):
         return clean
@@ -927,7 +927,7 @@ class RevertableSet(set):
 
     def __setstate__(self, state):
         if isinstance(state, tuple):
-            self.update(state[0].keys())
+            self.update(list(state[0].keys()))
         else:
             self.update(state)
 
@@ -1195,15 +1195,15 @@ class Rollback(renpy.object.Object):
 
         # Add objects reachable from the stores. (Objects that might be
         # unreachable at the moment.)
-        for changes in self.stores.itervalues():
-            for _k, v in changes.iteritems():
+        for changes in self.stores.values():
+            for _k, v in changes.items():
                 if v is not deleted:
                     reached(v, reachable, wait)
 
         # Add in objects reachable through the context.
         reached(self.context.info, reachable, wait)
         for d in self.context.dynamic_stack:
-            for v in d.itervalues():
+            for v in d.values():
                 reached(v, reachable, wait)
 
         # Add in objects reachable through displayables.
@@ -1235,19 +1235,19 @@ class Rollback(renpy.object.Object):
             if roll is not None:
                 obj._rollback(roll)
 
-        for name, changes in self.stores.iteritems():
+        for name, changes in self.stores.items():
             store = store_dicts.get(name, None)
             if store is None:
                 continue
 
-            for name, value in changes.iteritems():
+            for name, value in changes.items():
                 if value is deleted:
                     if name in store:
                         del store[name]
                 else:
                     store[name] = value
 
-        for name, changes in self.delta_ebc.iteritems():
+        for name, changes in self.delta_ebc.items():
 
             store = store_dicts.get(name, None)
             if store is None:
@@ -1436,18 +1436,18 @@ class RollbackLog(renpy.object.Object):
 
         # Update self.current.stores with the changes from each store.
         # Also updates .ever_been_changed.
-        for name, sd in store_dicts.iteritems():
+        for name, sd in store_dicts.items():
             self.current.stores[name], self.current.delta_ebc[name] = sd.get_changes(begin)
 
         # Update the list of mutated objects and what we need to do to
         # restore them.
 
-        for _i in xrange(4):
+        for _i in range(4):
 
             self.current.objects = [ ]
 
             try:
-                for _k, v in self.mutated.iteritems():
+                for _k, v in self.mutated.items():
 
                     if v is None:
                         continue
@@ -1478,7 +1478,7 @@ class RollbackLog(renpy.object.Object):
 
         rv = { }
 
-        for store_name, sd in store_dicts.iteritems():
+        for store_name, sd in store_dicts.items():
             for name in sd.ever_been_changed:
                 if name in sd:
                     rv[store_name + "." + name] = sd[name]
@@ -1842,7 +1842,7 @@ class RollbackLog(renpy.object.Object):
         clean_stores()
         renpy.translation.init_translation()
 
-        for name, value in roots.iteritems():
+        for name, value in roots.items():
 
             if "." in name:
                 store_name, name = name.rsplit(".", 1)
@@ -1909,7 +1909,7 @@ def py_exec_bytecode(bytecode, hide=False, globals=None, locals=None, store="sto
     if locals is None:
         locals = globals  # @ReservedAssignment
 
-    exec bytecode in globals, locals
+    exec(bytecode, globals, locals)
 
 
 def py_exec(source, hide=False, store=None):
@@ -1922,7 +1922,7 @@ def py_exec(source, hide=False, store=None):
     else:
         locals = store  # @ReservedAssignment
 
-    exec py_compile(source, 'exec') in store, locals
+    exec(py_compile(source, 'exec'), store, locals)
 
 
 def py_eval_bytecode(bytecode, globals=None, locals=None):  # @ReservedAssignment
@@ -1937,7 +1937,7 @@ def py_eval_bytecode(bytecode, globals=None, locals=None):  # @ReservedAssignmen
 
 
 def py_eval(code, globals=None, locals=None):  # @ReservedAssignment
-    if isinstance(code, basestring):
+    if isinstance(code, str):
         code = py_compile(code, 'eval')
 
     return py_eval_bytecode(code, globals, locals)
@@ -1966,7 +1966,7 @@ def raise_at_location(e, loc):
     code = compile(node, filename, 'exec')
 
     # PY3 - need to change to exec().
-    exec code in { "e" : e }
+    exec(code, { "e" : e })
 
 
 # This was used to proxy accesses to the store. Now it's kept around to deal
@@ -1985,12 +1985,12 @@ class StoreProxy(object):
 
 # Code for pickling bound methods.
 def method_pickle(method):
-    name = method.im_func.__name__
+    name = method.__func__.__name__
 
-    obj = method.im_self
+    obj = method.__self__
 
     if obj is None:
-        obj = method.im_class
+        obj = method.__self__.__class__
 
     return method_unpickle, (obj, name)
 
@@ -2012,8 +2012,8 @@ def module_unpickle(name):
     return __import__(name)
 
 
-import copy_reg
+import copyreg
 import types
 
-copy_reg.pickle(types.MethodType, method_pickle)
-copy_reg.pickle(types.ModuleType, module_pickle)
+copyreg.pickle(types.MethodType, method_pickle)
+copyreg.pickle(types.ModuleType, module_pickle)

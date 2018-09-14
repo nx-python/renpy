@@ -23,7 +23,7 @@ from __future__ import print_function
 import renpy
 import os.path
 from pickle import loads
-from cStringIO import StringIO
+from io import StringIO
 import sys
 import types
 import threading
@@ -32,7 +32,7 @@ import re
 
 # Ensure the utf-8 codec is loaded, to prevent recursion when we use it
 # to look up filenames.
-u"".encode("utf-8")
+"".encode("utf-8")
 
 
 # Physical Paths
@@ -137,7 +137,7 @@ def index_archives():
 
                 # Deobfuscate the index.
 
-                for k in index.keys():
+                for k in list(index.keys()):
 
                     if len(index[k][0]) == 2:
                         index[k] = [ (offset ^ key, dlen ^ key) for offset, dlen in index[k] ]
@@ -268,7 +268,7 @@ def scandirfiles():
     files = game_files
 
     for _prefix, index in archives:
-        for j in index.iterkeys():
+        for j in index.keys():
             add(None, j)
 
 
@@ -718,14 +718,14 @@ class RenpyImporter(object):
             mod.__path__ = [ filename[:-len("__init__.py")] ]
 
         source = load(filename).read().decode("utf8")
-        if source and source[0] == u'\ufeff':
+        if source and source[0] == '\ufeff':
             source = source[1:]
         source = source.encode("raw_unicode_escape")
 
         source = source.replace("\r", "")
 
         code = compile(source, filename, 'exec', renpy.python.old_compile_flags, 1)
-        exec code in mod.__dict__
+        exec(code, mod.__dict__)
 
         return mod
 
@@ -837,7 +837,7 @@ def auto_thread_function():
             if auto_quit_flag:
                 return
 
-            items = auto_mtimes.items()
+            items = list(auto_mtimes.items())
 
         for fn, mtime in items:
 

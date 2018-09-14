@@ -71,8 +71,8 @@ class Preference(object):
         self.default = default
         self.types = types if types else type(default)
 
-        if self.types is unicode:
-            self.types = basestring
+        if self.types is str:
+            self.types = str
 
         all_preferences.append(self)
 
@@ -126,10 +126,10 @@ Preference("renderer", "auto")
 Preference("performance_test", True)
 
 # The language we use for translations.
-Preference("language", None, (basestring, type(None)) )
+Preference("language", None, (str, type(None)) )
 
 # Should we self-voice?
-Preference("self_voicing", False, (bool, basestring, type(None)))
+Preference("self_voicing", False, (bool, str, type(None)))
 
 # Should we emphasize audio?
 Preference("emphasize_audio", False)

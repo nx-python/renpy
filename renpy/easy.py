@@ -57,7 +57,7 @@ def displayable_or_none(d, scope=None, dynamic=True):
     if d is None:
         return d
 
-    if isinstance(d, basestring):
+    if isinstance(d, str):
         if not d:
             raise Exception("An empty string cannot be used as a displayable.")
         elif ("[" in d) and renpy.config.dynamic_images and dynamic:
@@ -103,7 +103,7 @@ def displayable(d, scope=None):
     if isinstance(d, renpy.display.core.Displayable):
         return d
 
-    if isinstance(d, basestring):
+    if isinstance(d, str):
         if not d:
             raise Exception("An empty string cannot be used as a displayable.")
         elif ("[" in d) and renpy.config.dynamic_images:
@@ -164,7 +164,7 @@ def dynamic_image(d, scope=None, prefix=None, search=None):
 
     for i in d:
 
-        if not isinstance(i, basestring):
+        if not isinstance(i, str):
             continue
 
         if (prefix is not None) and ("[prefix_" in i):
@@ -247,7 +247,7 @@ def split_properties(properties, *prefixes):
 
     prefix_d = list(zip(prefixes, rv))
 
-    for k, v in properties.iteritems():
+    for k, v in properties.items():
         for prefix, d in prefix_d:
             if k.startswith(prefix):
                 d[k[len(prefix):]] = v

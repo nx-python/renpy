@@ -282,7 +282,7 @@ class Context(renpy.object.Object):
 
             vars(self.info).update(vars(context.info))
 
-            for k, v in context.music.items():
+            for k, v in list(context.music.items()):
                 self.music[k] = v.copy()
 
             self.movie = dict(context.movie)
@@ -366,7 +366,7 @@ class Context(renpy.object.Object):
 
         dynamic = self.dynamic_stack.pop()
 
-        for k, v in dynamic.iteritems():
+        for k, v in dynamic.items():
             if isinstance(v, Delete):
                 del store[k]
             else:
@@ -385,7 +385,7 @@ class Context(renpy.object.Object):
 
         for dynamic in reversed(self.dynamic_stack):
 
-            for k, v in dynamic.iteritems():
+            for k, v in dynamic.items():
                 name = "store." + k
 
                 if isinstance(v, Delete) and (name in roots):
@@ -571,7 +571,7 @@ class Context(renpy.object.Object):
                     except renpy.game.CONTROL_EXCEPTIONS as ce:
                         raise ce
                     except Exception as ce:
-                        raise exc_info[0], exc_info[1], exc_info[2]
+                        raise exc_info[0](exc_info[1]).with_traceback(exc_info[2])
 
                 node = self.next_node
 
