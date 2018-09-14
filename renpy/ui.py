@@ -821,9 +821,9 @@ def menu(menuitems,
                 text = choice_chosen_style
                 button = choice_chosen_button_style
 
-            if isinstance(button, basestring):
+            if isinstance(button, str):
                 button = getattr(renpy.game.style, button)
-            if isinstance(text, basestring):
+            if isinstance(text, str):
                 text = getattr(renpy.game.style, text)
 
             button = button[label]
@@ -850,7 +850,7 @@ def imagemap_compat(ground,
                     button_style='hotspot',
                     **properties):
 
-    if isinstance(button_style, basestring):
+    if isinstance(button_style, str):
         button_style = getattr(renpy.game.style, button_style)
 
     fixed(style=style, **properties)
@@ -1032,7 +1032,7 @@ def _bar(*args, **properties):
             else:
                 style = value.get_style()[0]
 
-            if isinstance(style, basestring):
+            if isinstance(style, str):
                 style = prefixed_style(style)
 
             properties["style"] = style
@@ -1088,7 +1088,7 @@ def viewport_common(vpfunc, _spacing_to_side, scrollbars=None, **properties):
     if renpy.config.position_viewport_side:
         from renpy.sl2.slproperties import position_property_names
 
-        for k, v in core_properties.items():
+        for k, v in list(core_properties.items()):
             if k in position_property_names:
                 side_properties[k] = v
             elif _spacing_to_side and (k == "spacing"):
@@ -1390,7 +1390,7 @@ returns = renpy.curry.curry(_returns)
 
 def _jumps(label, transition=None):
 
-    if isinstance(transition, basestring):
+    if isinstance(transition, str):
         transition = getattr(renpy.config, transition)
 
     if transition is not None:
@@ -1454,6 +1454,6 @@ def screen_id(id_, d):
 
 # Update the wrappers to have names.
 k, v = None, None
-for k, v in globals().iteritems():
+for k, v in globals().items():
     if isinstance(v, Wrapper):
         v.name = k
