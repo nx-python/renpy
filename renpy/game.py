@@ -373,10 +373,10 @@ def call_replay(label, scope={}):
     # This has to be here, to ensure the scope stuff works.
     renpy.exports.execute_default_statement()
 
-    for k, v in renpy.config.replay_scope.iteritems():
+    for k, v in renpy.config.replay_scope.items():
         setattr(renpy.store, k, v)
 
-    for k, v in scope.iteritems():
+    for k, v in scope.items():
         setattr(renpy.store, k, v)
 
     renpy.store._in_replay = label
