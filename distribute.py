@@ -9,6 +9,7 @@ import compileall
 import shutil
 import subprocess
 import argparse
+import imp
 
 if not sys.flags.optimize:
     raise Exception("Optimization disabled.")
@@ -83,11 +84,11 @@ def main():
         f.write("vc_version = {}".format(vc_version))
 
     try:
-        reload(sys.modules['renpy.vc_version'])  # @UndefinedVariable
+        imp.reload(sys.modules['renpy.vc_version'])  # @UndefinedVariable
     except:
         import renpy.vc_version  # @UnusedImport
 
-    reload(sys.modules['renpy'])
+    imp.reload(sys.modules['renpy'])
 
     # Check that the versions match.
     full_version = renpy.version_only  # @UndefinedVariable
