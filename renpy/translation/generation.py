@@ -87,7 +87,7 @@ def scan_comments(filename):
     start = 0
 
     with codecs.open(filename, "r", "utf-8") as f:
-        lines = [ i.rstrip() for i in f.read().replace(u"\ufeff", "").split('\n') ]
+        lines = [ i.rstrip() for i in f.read().replace("\ufeff", "").split('\n') ]
 
     for i, l in enumerate(lines):
 
@@ -137,15 +137,15 @@ def open_tl_file(fn):
             pass
 
         f = io.open(fn, "a", encoding="utf-8")
-        f.write(u"\ufeff")
+        f.write("\ufeff")
 
     else:
         f = io.open(fn, "a", encoding="utf-8")
 
     if todo:
-        f.write(u"# TO" + "DO: Translation updated at {}\n".format(time.strftime("%Y-%m-%d %H:%M")))
+        f.write("# TO" + "DO: Translation updated at {}\n".format(time.strftime("%Y-%m-%d %H:%M")))
 
-    f.write(u"\n")
+    f.write("\n")
 
     tl_file_cache[fn] = f
 
@@ -154,7 +154,7 @@ def open_tl_file(fn):
 
 def close_tl_files():
 
-    for i in tl_file_cache.values():
+    for i in list(tl_file_cache.values()):
         i.close()
 
     tl_file_cache.clear()
@@ -216,17 +216,17 @@ def write_translates(filename, language, filter):  # @ReservedAssignment
         if label is None:
             label = ""
 
-        f.write(u"# {}:{}\n".format(t.filename, t.linenumber))
-        f.write(u"translate {} {}:\n".format(language, t.identifier.replace('.', '_')))
-        f.write(u"\n")
+        f.write("# {}:{}\n".format(t.filename, t.linenumber))
+        f.write("translate {} {}:\n".format(language, t.identifier.replace('.', '_')))
+        f.write("\n")
 
         for n in t.block:
-            f.write(u"    # " + n.get_code() + "\n")
+            f.write("    # " + n.get_code() + "\n")
 
         for n in t.block:
-            f.write(u"    " + n.get_code(filter) + "\n")
+            f.write("    " + n.get_code(filter) + "\n")
 
-        f.write(u"\n")
+        f.write("\n")
 
 
 def translation_filename(s):
@@ -278,23 +278,23 @@ def write_strings(language, filter, min_priority, max_priority, common_only):  #
 
         stringfiles[tlfn].append(s)
 
-    for tlfn, sl in stringfiles.items():
+    for tlfn, sl in list(stringfiles.items()):
 
         # sl.sort(key=lambda s : (s.filename, s.line))
 
         tlfn = os.path.join(renpy.config.gamedir, renpy.config.tl_directory, language, tlfn)
         f = open_tl_file(tlfn)
 
-        f.write(u"translate {} strings:\n".format(language))
-        f.write(u"\n")
+        f.write("translate {} strings:\n".format(language))
+        f.write("\n")
 
         for s in sl:
-            text = filter(s.text)
+            text = list(filter(s.text))
 
-            f.write(u"    # {}:{}\n".format(s.elided, s.line))
-            f.write(u"    old \"{}\"\n".format(quote_unicode(s.text)))
-            f.write(u"    new \"{}\"\n".format(quote_unicode(text)))
-            f.write(u"\n")
+            f.write("    # {}:{}\n".format(s.elided, s.line))
+            f.write("    old \"{}\"\n".format(quote_unicode(s.text)))
+            f.write("    new \"{}\"\n".format(quote_unicode(text)))
+            f.write("\n")
 
 
 def null_filter(s):

@@ -152,7 +152,7 @@ def scan_comments(filename):
     start = 0
 
     with codecs.open(filename, "r", "utf-8") as f:
-        lines = [ i.rstrip() for i in f.read().replace(u"\ufeff", "").split('\n') ]
+        lines = [ i.rstrip() for i in f.read().replace("\ufeff", "").split('\n') ]
 
     for i, l in enumerate(lines):
 

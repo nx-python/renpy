@@ -110,7 +110,7 @@ class ScriptTranslator(object):
                 continue
 
             if n.name.__class__ is not tuple:
-                if isinstance(n.name, basestring):
+                if isinstance(n.name, str):
                     label = n.name
 
             type_n = n.__class__
@@ -417,16 +417,16 @@ class StringTranslator(object):
 
         f = renpy.translation.generation.open_tl_file(fn)
 
-        f.write(u"translate {} strings:\n".format(language))
-        f.write(u"\n")
+        f.write("translate {} strings:\n".format(language))
+        f.write("\n")
 
         for i in self.unknown:
 
             i = quote_unicode(i)
 
-            f.write(u"    old \"{}\"\n".format(i))
-            f.write(u"    new \"{}\"\n".format(i))
-            f.write(u"\n")
+            f.write("    old \"{}\"\n".format(i))
+            f.write("    new \"{}\"\n".format(i))
+            f.write("\n")
 
         f.close()
 

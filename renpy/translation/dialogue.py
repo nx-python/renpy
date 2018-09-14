@@ -49,7 +49,7 @@ def create_dialogue_map(language):
 
     translator = renpy.game.script.translator
 
-    for v in translator.file_translates.values():
+    for v in list(translator.file_translates.values()):
 
         for _, t in v:
 
