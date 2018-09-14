@@ -151,7 +151,7 @@ class LogFile(object):
                 s = s % args
                 s += "\n"
 
-            if not isinstance(s, unicode):
+            if not isinstance(s, str):
                 s = s.decode("latin-1")
 
             s = s.replace("\n", "\r\n")
@@ -194,6 +194,7 @@ class TimeLog(list):
     """
 
     def __init__(self, duration):
+        super().__init__()
         self.duration = duration
 
     def append(self, v):
@@ -217,12 +218,13 @@ class TimeLog(list):
 class StdioRedirector(object):
 
     def __init__(self):
+        self.real_file = None
         self.buffer = ''
         self.log = open("log", developer=False, append=False)
 
     def write(self, s):
 
-        if isinstance(s, unicode):
+        if not isinstance(s, str):
             es = s.encode("utf-8")
         else:
             es = s
@@ -269,7 +271,9 @@ class StdioRedirector(object):
 if not "RENPY_NO_REDIRECT_STDIO" in os.environ:
 
     class StdoutRedirector(StdioRedirector):
-        real_file = real_stdout
+        def __init__(self):
+            super().__init__()
+            self.real_file = real_stdout
 
         def get_callbacks(self):
             return renpy.config.stdout_callbacks
@@ -277,7 +281,9 @@ if not "RENPY_NO_REDIRECT_STDIO" in os.environ:
     sys.stdout = sys_stdout = StdoutRedirector()
 
     class StderrRedirector(StdioRedirector):
-        real_file = real_stderr
+        def __init__(self):
+            super().__init__()
+            self.real_file = real_stderr
 
         def get_callbacks(self):
             return renpy.config.stderr_callbacks
