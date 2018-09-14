@@ -124,7 +124,7 @@ def adjust_line_locations(filename, linenumber, char_offset, line_offset):
 
     new_lines = { }
 
-    for key, line in lines.iteritems():
+    for key, line in lines.items():
 
         (fn, ln) = key
 

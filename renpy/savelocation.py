@@ -119,7 +119,7 @@ class FileLocation(object):
 
             self.mtimes = new_mtimes
 
-            for slotname, mtime in new_mtimes.iteritems():
+            for slotname, mtime in new_mtimes.items():
                 if old_mtimes.get(slotname, None) != mtime:
                     clear_slot(slotname)
 

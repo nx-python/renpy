@@ -229,7 +229,7 @@ class Parser(object):
         and expr instances, and adjusts the line number.
         """
 
-        if isinstance(expr, unicode):
+        if isinstance(expr, str):
             expr = renpy.python.escape_unicode(expr)
 
         try:
@@ -252,7 +252,7 @@ class Parser(object):
         adjusts the line number. Returns a list of statements.
         """
 
-        if isinstance(code, unicode):
+        if isinstance(code, str):
             code = renpy.python.escape_unicode(code)
 
         try:

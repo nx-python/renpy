@@ -31,7 +31,7 @@ from __future__ import print_function
 import ast
 import collections
 import linecache
-from cPickle import loads, dumps
+from pickle import loads, dumps
 import zlib
 import weakref
 
@@ -1470,7 +1470,7 @@ class SLFor(SLBlock):
         if not isinstance(c, dict):
             return
 
-        for child_cache in c.values():
+        for child_cache in list(c.values()):
             for i in self.children:
                 i.copy_on_change(child_cache)
 
@@ -1494,7 +1494,7 @@ class SLPython(SLNode):
         analysis.python(self.code.source)
 
     def execute(self, context):
-        exec self.code.bytecode in context.globals, context.scope
+        exec(self.code.bytecode, context.globals, context.scope)
 
     def prepare(self, analysis):
         self.constant = NOT_CONST
