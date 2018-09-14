@@ -44,7 +44,7 @@ warpers = { }
 
 
 def atl_warper(f):
-    name = f.func_name
+    name = f.__name__
     warpers[name] = f
     return f
 
@@ -159,10 +159,10 @@ def interpolate(t, a, b, type):  # @ReservedAssignment
         if a is None:
             a = [ None ] * len(b)
 
-        return tuple(interpolate(t, i, j, ty) for i, j, ty in zip(a, b, type))
+        return tuple(interpolate(t, i, j, ty) for i, j, ty in list(zip(a, b, type)))
 
     # Deal with booleans, nones, etc.
-    elif b is None or isinstance(b, (bool, basestring)):
+    elif b is None or isinstance(b, (bool, str)):
         if t >= 1.0:
             return b
         else:
@@ -182,7 +182,7 @@ def interpolate(t, a, b, type):  # @ReservedAssignment
 def interpolate_spline(t, spline):
 
     if isinstance(spline[-1], tuple):
-        return tuple(interpolate_spline(t, i) for i in zip(*spline))
+        return tuple(interpolate_spline(t, i) for i in list(zip(*spline)))
 
     if spline[0] is None:
         return spline[-1]
@@ -420,7 +420,7 @@ class ATLTransformBase(renpy.object.Object):
             raise Exception("Too many arguments passed to ATL transform.")
 
         # Handle keyword arguments.
-        for k, v in kwargs.iteritems():
+        for k, v in kwargs.items():
 
             if k in positional:
                 positional.remove(k)
@@ -1218,7 +1218,7 @@ class Interpolation(Statement):
             linear, revolution, splines = state
 
         # Linearly interpolate between the things in linear.
-        for k, (old, new) in linear.iteritems():
+        for k, (old, new) in linear.items():
             value = interpolate(complete, old, new, PROPERTIES[k])
 
             setattr(trans.state, k, value)
@@ -1483,19 +1483,19 @@ class RawOn(RawStatement):
 
         handlers = { }
 
-        for k, v in self.handlers.iteritems():
+        for k, v in self.handlers.items():
             handlers[k] = v.compile(ctx)
 
         return On(self.loc, handlers)
 
     def predict(self, ctx):
-        for i in self.handlers.itervalues():
+        for i in self.handlers.values():
             i.predict(ctx)
 
     def mark_constant(self):
         constant = GLOBAL_CONST
 
-        for block in self.handlers.itervalues():
+        for block in self.handlers.values():
             block.mark_constant()
             constant = min(constant, block.constant)
 
@@ -1585,7 +1585,7 @@ class On(Statement):
                 return "event", (name, arg), None
 
     def visit(self):
-        return [ j for i in self.handlers.itervalues() for j in i.visit() ]
+        return [ j for i in self.handlers.values() for j in i.visit() ]
 
 
 # Event statement.
