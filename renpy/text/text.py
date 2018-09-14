@@ -878,7 +878,7 @@ class Layout(object):
                 if isinstance(i[0], (TextSegment, SpaceSegment, DisplayableSegment)):
                     return
 
-            line.extend(tss[-1].subsegment(u"\u200B"))
+            line.extend(tss[-1].subsegment("\u200B"))
 
         for type, text in tokens:  # @ReservedAssignment
 
@@ -898,7 +898,7 @@ class Layout(object):
                 continue
 
             elif type == DISPLAYABLE:
-                line.append((DisplayableSegment(tss[-1], text, renders), u""))
+                line.append((DisplayableSegment(tss[-1], text, renders), ""))
                 continue
 
             # Otherwise, we have a text tag.
@@ -930,7 +930,7 @@ class Layout(object):
 
             elif tag == "space":
                 width = self.scale_int(int(value))
-                line.append((SpaceSegment(tss[-1], width=width), u""))
+                line.append((SpaceSegment(tss[-1], width=width), ""))
 
             elif tag == "vspace":
                 # Duplicates from the newline tag.
@@ -940,7 +940,7 @@ class Layout(object):
                 if line:
                     paragraphs.append(line)
 
-                line = [ (SpaceSegment(tss[-1], height=height), u"") ]
+                line = [ (SpaceSegment(tss[-1], height=height), "") ]
                 paragraphs.append(line)
 
                 line = [ ]
@@ -1369,7 +1369,7 @@ class Text(renpy.display.core.Displayable):
 
         # Check that the text is all text-able things.
         for i in text:
-            if not isinstance(i, (basestring, renpy.display.core.Displayable)):
+            if not isinstance(i, (str, renpy.display.core.Displayable)):
                 if renpy.config.developer:
                     raise Exception("Cannot display {0!r} as text.".format(i))
                 else:
@@ -1444,15 +1444,15 @@ class Text(renpy.display.core.Displayable):
         s = ""
 
         for i in self.text:
-            if isinstance(i, basestring):
+            if isinstance(i, str):
                 s += i
 
             if len(s) > 25:
-                s = s[:24] + u"\u2026"
+                s = s[:24] + "\u2026"
                 break
 
         s = s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")
-        return u"Text \"{}\"".format(s)
+        return "Text \"{}\"".format(s)
 
     def _scope(self, scope, update=True):
         """
@@ -1484,15 +1484,15 @@ class Text(renpy.display.core.Displayable):
 
         # Perform substitution as necessary.
         for i in text:
-            if isinstance(i, basestring):
+            if isinstance(i, str):
                 if substitute is not False:
                     i, did_sub = renpy.substitutions.substitute(i, scope, substitute)
                     uses_scope = uses_scope or did_sub
 
                 if isinstance(i, str):
-                    i = unicode(i, "utf-8", "replace")
+                    i = str(i, "utf-8", "replace")
                 else:
-                    i = unicode(i)
+                    i = str(i)
 
             new_text.append(i)
 
@@ -1605,7 +1605,7 @@ class Text(renpy.display.core.Displayable):
 
         for i in self.text:
 
-            if not isinstance(i, basestring):
+            if not isinstance(i, str):
                 continue
 
             rv.append(i)
@@ -1994,11 +1994,11 @@ class Text(renpy.display.core.Displayable):
 
         for i in text:
 
-            if isinstance(i, unicode):
+            if isinstance(i, str):
                 tokens.extend(textsupport.tokenize(i))
 
             elif isinstance(i, str):
-                tokens.extend(textsupport.tokenize(unicode(i)))
+                tokens.extend(textsupport.tokenize(str(i)))
 
             elif isinstance(i, renpy.display.core.Displayable):
                 tokens.append((DISPLAYABLE, i))
@@ -2021,7 +2021,7 @@ class Text(renpy.display.core.Displayable):
             kind, text = t
 
             if kind == TEXT and renpy.config.replace_text:
-                rv.append((TEXT, unicode(renpy.config.replace_text(text))))
+                rv.append((TEXT, str(renpy.config.replace_text(text))))
 
             elif kind != TAG:
                 rv.append(t)
@@ -2073,7 +2073,7 @@ class Text(renpy.display.core.Displayable):
 
                 for kind2, text2 in new_contents:
                     if isinstance(text2, str):
-                        text2 = unicode(text2)
+                        text2 = str(text2)
 
                     new_tokens.append((kind2, text2))
 

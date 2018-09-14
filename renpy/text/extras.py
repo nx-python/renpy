@@ -79,7 +79,7 @@ def check_text_tags(s):
         all_tags = text_tags
 
     try:
-        tokens = textsupport.tokenize(unicode(s))
+        tokens = textsupport.tokenize(str(s))
     except Exception as e:
         return e.args[0]
 
@@ -139,7 +139,7 @@ def filter_text_tags(s, allow=None, deny=None):
     if (allow is not None) and (deny is not None):
         raise Exception("Only one of the allow and deny keyword arguments should be given to filter_text_tags.")
 
-    tokens = textsupport.tokenize(unicode(s))
+    tokens = textsupport.tokenize(str(s))
 
     rv = [ ]
 
@@ -219,7 +219,7 @@ def textwrap(s, width=78, asian=False):
 
     glyphs = [ ]
 
-    for c in unicode(s):
+    for c in str(s):
 
         eaw = unicodedata.east_asian_width(c)
 
