@@ -38,7 +38,7 @@ def extract_strings_core(language, destination, merge=False, force=False):
         with open(destination, "r") as f:
             result.update(json.load(f, "utf-8"))
 
-    for k, v in st.translations.iteritems():
+    for k, v in st.translations.items():
         if v and v != k:
             result[k] = v
 
