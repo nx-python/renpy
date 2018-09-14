@@ -2639,14 +2639,14 @@ class GLFunction(object):
 
             print(prefix + "    realGl%s(%s)" % (
                 self.name,
-                ", ".join(("a%d" % i) for i in range(len(self.args)))
+                ", ".join(("a%d" % i) for i in list(range(len(self.args))))
                 ), file=f)
         else:
 
             print("    cdef %s rv = realGl%s(%s)" % (
                 self.type,
                 self.name,
-                ", ".join(("a%d" % i) for i in range(len(self.args)))
+                ", ".join(("a%d" % i) for i in list(range(len(self.args))))
                 ), file=f)
 
         print("    if check_errors:", file=f)
