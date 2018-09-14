@@ -124,7 +124,7 @@ def interact():
 
     if renpy.audio.music.get_playing("movie"):
 
-        for i in displayable_channels.keys():
+        for i in list(displayable_channels.keys()):
             if i[0] == "movie":
                 fullscreen = False
                 break
@@ -439,7 +439,7 @@ def update_playing():
 
     old_channel_movie = renpy.game.context().movie
 
-    for c, m in channel_movie.items():
+    for c, m in list(channel_movie.items()):
 
         old = old_channel_movie.get(c, None)
 
@@ -448,7 +448,7 @@ def update_playing():
         elif old is not m:
             m.play(old)
 
-    for c, m in old_channel_movie.items():
+    for c, m in list(old_channel_movie.items()):
         if c not in channel_movie:
             m.stop()
 
@@ -485,7 +485,7 @@ def frequent():
                     break
 
         if update:
-            for v in displayable_channels.values():
+            for v in list(displayable_channels.values()):
                 for j in v:
                     renpy.display.render.redraw(j, 0.0)
 

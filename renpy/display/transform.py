@@ -581,7 +581,7 @@ class Transform(Container):
             self.arguments = { }
 
             # Fill self.arguments with a
-            for k, v in kwargs.iteritems():
+            for k, v in kwargs.items():
 
                 prefix = ""
                 prop = k
@@ -607,7 +607,7 @@ class Transform(Container):
                         prefix = new_prefix
 
             if "" in self.arguments:
-                for k, v in self.arguments[""].iteritems():
+                for k, v in self.arguments[""].items():
                     setattr(self.state, k, v)
 
         else:
@@ -666,7 +666,7 @@ class Transform(Container):
             if d is None:
                 continue
 
-            for k, v in d.iteritems():
+            for k, v in d.items():
                 setattr(state, k, v)
 
         return None
@@ -867,7 +867,7 @@ class Transform(Container):
         if not offsets:
             return None
 
-        for i in xrange(len(self.children)-1, -1, -1):
+        for i in range(len(self.children)-1, -1, -1):
 
             d = children[i]
             xo, yo = offsets[i]
@@ -1010,7 +1010,7 @@ class Transform(Container):
         self.update_state()
 
 
-Transform.render = types.MethodType(renpy.display.accelerator.transform_render, None, Transform)
+Transform.render = types.MethodType(renpy.display.accelerator.transform_render, Transform)
 
 
 class ATLTransform(renpy.atl.ATLTransformBase, Transform):

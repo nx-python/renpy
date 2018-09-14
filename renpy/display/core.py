@@ -33,7 +33,7 @@ import pygame_sdl2 as pygame
 import sys
 import os
 import time
-import cStringIO
+import io
 import threading
 import copy
 import gc
@@ -405,7 +405,7 @@ class Displayable(renpy.object.Object):
         return self.__class__.__name__
 
     def __repr__(self):
-        return "<{} at {:x}>".format(unicode(self).encode("utf-8"), id(self))
+        return "<{} at {:x}>".format(str(self).encode("utf-8"), id(self))
 
     def find_focusable(self, callback, focus_name):
 
@@ -1118,7 +1118,7 @@ class SceneLists(renpy.object.Object):
         """
 
         rv = [ ]
-        for l in self.layers.itervalues():
+        for l in self.layers.values():
             for sle in l:
                 rv.append(sle.displayable)
 
@@ -1131,7 +1131,7 @@ class SceneLists(renpy.object.Object):
         be displayed, or everything will be removed.
         """
 
-        for i in reversed(xrange(len(self.layers[layer]))):
+        for i in reversed(range(len(self.layers[layer]))):
 
             sle = self.layers[layer][i]
 
@@ -1186,7 +1186,7 @@ class SceneLists(renpy.object.Object):
 
             # Have to iterate in reverse order, since otherwise
             # the indexes might change.
-            for i in reversed(xrange(len(self.layers[layer]))):
+            for i in reversed(range(len(self.layers[layer]))):
                 self.hide_or_replace(layer, i, hide)
 
         self.at_list[layer].clear()
@@ -1205,10 +1205,10 @@ class SceneLists(renpy.object.Object):
         time with the given time.
         """
 
-        for l, (t, list) in self.layer_at_list.items():  # @ReservedAssignment
+        for l, (t, list) in list(self.layer_at_list.items()):  # @ReservedAssignment
             self.layer_at_list[l] = (t or time, list)
 
-        for l, ll in self.layers.iteritems():
+        for l, ll in self.layers.items():
             self.layers[l] = [ i.update_time(time) for i in ll ]
 
     def showing(self, layer, name):
@@ -2115,7 +2115,7 @@ class Interface(object):
 
         self.screenshot_surface = surf
 
-        sio = cStringIO.StringIO()
+        sio = io.StringIO()
         renpy.display.module.save_png(surf, sio, 0)
         self.screenshot = sio.getvalue()
         sio.close()
@@ -2236,7 +2236,7 @@ class Interface(object):
         scene_lists = renpy.game.context().scene_lists
 
         # Compute the scene.
-        for layer, d in self.compute_scene(scene_lists).iteritems():
+        for layer, d in self.compute_scene(scene_lists).items():
             if layer not in self.transition:
                 self.old_scene[layer] = d
 
@@ -2945,7 +2945,7 @@ class Interface(object):
         renpy.plog(1, "computed scene")
 
         # If necessary, load all images here.
-        for w in scene.itervalues():
+        for w in scene.values():
             try:
                 renpy.display.predict.displayable(w)
             except:
@@ -3153,7 +3153,7 @@ class Interface(object):
 
                         scene_lists.set_times(self.interact_time)
 
-                        for k, v in self.transition_time.iteritems():
+                        for k, v in self.transition_time.items():
                             if v is None:
                                 self.transition_time[k] = self.interact_time
 

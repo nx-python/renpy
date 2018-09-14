@@ -309,7 +309,7 @@ def draw_special(what, dest, x, y):
 
         ramp = "\x00" * 256
 
-        for i in xrange(0, ramplen):
+        for i in range(0, ramplen):
             ramp += chr(255 * i / ramplen)
 
         ramp += "\xff" * 256

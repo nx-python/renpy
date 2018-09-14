@@ -105,7 +105,7 @@ class ScreenProfile(renpy.object.Object):
         self.const = const
 
         if name is not None:
-            if isinstance(name, basestring):
+            if isinstance(name, str):
                 name = tuple(name.split())
                 profile[name] = self
 
@@ -119,7 +119,7 @@ def get_profile(name):
         A string or tuple.
     """
 
-    if isinstance(name, basestring):
+    if isinstance(name, str):
         name = tuple(name.split())
 
     if name in profile:
@@ -210,12 +210,12 @@ class Screen(renpy.object.Object):
                  layer="screens"):
 
         # The name of this screen.
-        if isinstance(name, basestring):
+        if isinstance(name, str):
             name = tuple(name.split())
 
         self.name = name
 
-        if (variant is None) or isinstance(variant, basestring):
+        if (variant is None) or isinstance(variant, str):
             variant = [ variant ]
 
         for v in variant:
@@ -765,7 +765,7 @@ def get_all_screen_variants(name):
 
     rv = [ ]
 
-    for k, v in screens.iteritems():
+    for k, v in screens.items():
         if k[0] == name:
             rv.append((k[1], v))
 
@@ -806,7 +806,7 @@ def sort_screens():
 
     names = { i[0] for i in screens }
 
-    for k, v in screens.items():
+    for k, v in list(screens.items()):
 
         name = k[0]
 
@@ -828,7 +828,7 @@ def sort_screens():
 
     rv = [ ]
 
-    workset = { k for k, v in depends.items() if not len(v) }
+    workset = { k for k, v in list(depends.items()) if not len(v) }
 
     while workset:
         name = workset.pop()
@@ -844,7 +844,7 @@ def sort_screens():
         del reverse[name]
 
     # Store the use cycle for later reporting.
-    use_cycle = reverse.keys()
+    use_cycle = list(reverse.keys())
     use_cycle.sort()
 
     sorted_screens = rv
@@ -861,7 +861,7 @@ def sorted_variants():
     rv = [ ]
 
     for name in sort_screens():
-        rv.extend(screens_by_name[name].values())
+        rv.extend(list(screens_by_name[name].values()))
 
     return rv
 
@@ -961,7 +961,7 @@ def get_screen_layer(name):
     Returns the layer that the screen with `name` is part of.
     """
 
-    if not isinstance(name, basestring):
+    if not isinstance(name, str):
         name = name[0]
 
     screen = get_screen_variant(name)
@@ -995,7 +995,7 @@ def get_screen(name, layer=None):
     if layer is None:
         layer = get_screen_layer(name)
 
-    if isinstance(name, basestring):
+    if isinstance(name, str):
         name = (name, )
 
     sl = renpy.exports.scene_lists()
@@ -1307,7 +1307,7 @@ def before_restart():
     longer defined.
     """
 
-    for k, layer in renpy.display.interface.old_scene.iteritems():
+    for k, layer in renpy.display.interface.old_scene.items():
         if k is None:
             continue
 

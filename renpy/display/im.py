@@ -28,7 +28,7 @@ import renpy.display
 
 import math
 import zipfile
-import cStringIO
+import io
 import threading
 import time
 import io
@@ -134,7 +134,7 @@ class Cache(object):
         cache, in pixels.
         """
 
-        rv = sum(i.size() for i in self.cache.values())
+        rv = sum(i.size() for i in list(self.cache.values()))
 
 #         print("Total cache size: {:.1f}/{:.1f} MB (Textures {:.1f} MB)".format(
 #             4.0 * rv / 1024 / 1024,
@@ -152,7 +152,7 @@ class Cache(object):
 
         start = self.time - generations
 
-        rv = sum(i.size() for i in self.cache.values() if i.time > start)
+        rv = sum(i.size() for i in list(self.cache.values()) if i.time > start)
         return rv
 
     def init(self):
@@ -363,7 +363,7 @@ class Cache(object):
         # If we're outside the cache limit, we need to go and start
         # killing off some of the entries until we're back inside it.
 
-        for ce in sorted(self.cache.itervalues(), key=lambda a : a.time):
+        for ce in sorted(iter(self.cache.values()), key=lambda a : a.time):
 
             if ce.time == self.time:
                 # If we're bigger than the limit, and there's nothing
@@ -480,7 +480,7 @@ class Cache(object):
 
                 # Remove things that are not in the workset from the pin cache,
                 # and remove things that are in the workset from pin cache.
-                for i in self.pin_cache.keys():
+                for i in list(self.pin_cache.keys()):
 
                     if i in workset:
                         workset.remove(i)
@@ -606,9 +606,9 @@ class Image(ImageBase):
 
     def __unicode__(self):
         if len(self.filename) < 20:
-            return u"Image %r" % self.filename
+            return "Image %r" % self.filename
         else:
-            return u"Image \u2026%s" % self.filename[-20:]
+            return "Image \u2026%s" % self.filename[-20:]
 
     def get_hash(self):
         return renpy.loader.get_hash(self.filename)
@@ -672,7 +672,7 @@ class Data(ImageBase):
         self.filename = filename
 
     def __unicode__(self):
-        return u"im.Data(%r)" % self.filename
+        return "im.Data(%r)" % self.filename
 
     def load(self):
         f = io.BytesIO(self.data)
@@ -691,7 +691,7 @@ class ZipFileImage(ImageBase):
         try:
             zf = zipfile.ZipFile(self.zipfilename, 'r')
             data = zf.read(self.filename)
-            sio = cStringIO.StringIO(data)
+            sio = io.StringIO(data)
             rv = renpy.display.pgrender.load_image(sio, self.filename)
             zf.close()
             return rv
@@ -1686,7 +1686,7 @@ def image(arg, loose=False, **properties):
     if isinstance(arg, ImageBase):
         return arg
 
-    elif isinstance(arg, basestring):
+    elif isinstance(arg, str):
         return Image(arg, **properties)
 
     elif isinstance(arg, renpy.display.image.ImageReference):

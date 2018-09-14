@@ -121,7 +121,7 @@ class Edge(object):
         self.prob = prob
 
     def add(self, sma):
-        for _i in xrange(0, self.prob):
+        for _i in range(0, self.prob):
             sma.edges.setdefault(self.old, []).append(self)
 
 
@@ -202,7 +202,7 @@ class SMAnimation(renpy.display.core.Displayable):
         self.state = None
 
     def visit(self):
-        return [ i.image for i in self.states.itervalues() ]
+        return [ i.image for i in self.states.values() ]
 
     def pick_edge(self, state):
         """
@@ -302,10 +302,10 @@ class SMAnimation(renpy.display.core.Displayable):
 
         args = [ ]
 
-        for state in self.states.itervalues():
+        for state in self.states.values():
             args.append(state.motion_copy(child))
 
-        for edges in self.edges.itervalues():
+        for edges in self.edges.values():
             args.extend(edges)
 
         return SMAnimation(self.initial, delay=self.delay, *args, **self.properties)

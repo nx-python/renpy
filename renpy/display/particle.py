@@ -300,7 +300,7 @@ class SpriteManager(renpy.display.core.Displayable):
         return rv
 
     def event(self, ev, x, y, st):
-        for i in xrange(len(self.children) -1, -1, -1):
+        for i in range(len(self.children) -1, -1, -1):
             s = self.children[i]
 
             if s.events:
@@ -438,7 +438,7 @@ class SnowBlossomFactory(renpy.python.NoRollback):
         self.init()
 
     def init(self):
-        self.starts = [ random.uniform(0, self.start) for _i in xrange(0, self.count) ]  # W0201
+        self.starts = [ random.uniform(0, self.start) for _i in range(0, self.count) ]  # W0201
         self.starts.append(self.start)
         self.starts.sort()
 
@@ -453,7 +453,7 @@ class SnowBlossomFactory(renpy.python.NoRollback):
         if (st == 0) and not particles and self.fast:
             rv = [ ]
 
-            for _i in xrange(0, self.count):
+            for _i in range(0, self.count):
                 rv.append(SnowBlossomParticle(self.image,
                                               ranged(self.xspeed),
                                               ranged(self.yspeed),

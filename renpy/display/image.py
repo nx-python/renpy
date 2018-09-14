@@ -61,7 +61,7 @@ def get_available_image_tags():
     Returns a list of image tags that have been defined.
     """
 
-    return [ k for k, v in image_attributes.items() if v ]
+    return [ k for k, v in list(image_attributes.items()) if v ]
 
 
 def get_available_image_attributes(tag, attributes=()):
@@ -115,7 +115,7 @@ def check_image_attributes(tag, attributes):
 
     l = [ ]
 
-    for attrs, d in image_attributes[tag].items():
+    for attrs, d in list(image_attributes[tag].items()):
 
         remainder = [ i for i in attributes if i not in attrs ]
 
@@ -211,8 +211,8 @@ def get_ordered_image_attributes(tag, attributes=(), sort=None):
 
     while after:
 
-        mincount = min(len(i) for i in after.values())
-        ready = set(k for k, v in after.items() if len(v) == mincount)
+        mincount = min(len(i) for i in list(after.values()))
+        ready = set(k for k, v in list(after.items()) if len(v) == mincount)
 
         for i in ready:
             del after[i]
@@ -340,7 +340,7 @@ class ImageReference(renpy.display.core.Displayable):
         self.name = name
 
     def __unicode__(self):
-        return u"<ImageReference {!r}>".format(self.name)
+        return "<ImageReference {!r}>".format(self.name)
 
     def __hash__(self):
         return hash(self.name)
@@ -561,7 +561,7 @@ class DynamicImage(renpy.display.core.Displayable):
         else:
             self._uses_scope = False
 
-        if isinstance(name, basestring) and ("[prefix_" in name):
+        if isinstance(name, str) and ("[prefix_" in name):
             self._duplicatable = True
 
         if isinstance(name, list):
@@ -573,7 +573,7 @@ class DynamicImage(renpy.display.core.Displayable):
         return self.find_target(scope, update)
 
     def __unicode__(self):
-        return u"DynamicImage {!r}".format(self.name)
+        return "DynamicImage {!r}".format(self.name)
 
     def __hash__(self):
 
@@ -617,7 +617,7 @@ class DynamicImage(renpy.display.core.Displayable):
             search = [ ]
             target = renpy.easy.dynamic_image(self.name, scope, prefix=prefix, search=search)
         except KeyError as ke:
-            raise Exception("In DynamicImage %r: Could not find substitution '%s'." % (self.name, unicode(ke.args[0])))
+            raise Exception("In DynamicImage %r: Could not find substitution '%s'." % (self.name, str(ke.args[0])))
         except Exception as e:
             raise Exception("In DynamicImage %r: %r" % (self.name, e))
 
@@ -830,7 +830,7 @@ class ShownImageInfo(renpy.object.Object):
         if layer is None:
             layer = 'master'
 
-        for l, t in self.attributes.keys():
+        for l, t in list(self.attributes.keys()):
             if l == layer:
                 del self.attributes[l, t]
 
@@ -902,7 +902,7 @@ class ShownImageInfo(renpy.object.Object):
         # The list of matching images.
         matches = None
 
-        for attrs, d in image_attributes[tag].items():
+        for attrs, d in list(image_attributes[tag].items()):
 
             ca = getattr(d, "_choose_attributes", None)
 

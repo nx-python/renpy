@@ -430,7 +430,7 @@ class Keymap(renpy.display.layout.Null):
 
     def event(self, ev, x, y, st):
 
-        for name, action in self.keymap.iteritems():
+        for name, action in self.keymap.items():
 
             if map_event(ev, name):
 
@@ -444,7 +444,7 @@ class Keymap(renpy.display.layout.Null):
                 raise renpy.display.core.IgnoreEvent()
 
     def predict_one_action(self):
-        for i in self.keymap.itervalues():
+        for i in self.keymap.values():
             predict_action(i)
 
 
@@ -713,7 +713,7 @@ class Button(renpy.display.layout.Window):
         predict_action(self.alternate)
 
         if self.keymap:
-            for v in self.keymap.itervalues():
+            for v in self.keymap.values():
                 predict_action(v)
 
     def render(self, width, height, st, at):
@@ -872,7 +872,7 @@ class Button(renpy.display.layout.Window):
             return None
 
         # Check the keymap.
-        for name, action in self.keymap.iteritems():
+        for name, action in self.keymap.items():
             if map_event(ev, name):
                 return run(action)
 
@@ -986,7 +986,7 @@ class ImageButton(Button):
                                           **properties)
 
     def visit(self):
-        return self.state_children.values()
+        return list(self.state_children.values())
 
     def get_child(self):
         return self.style.child or self.state_children[self.style.prefix]
@@ -1069,8 +1069,8 @@ class Input(renpy.text.text.Text):  # @UndefinedVariable
     caret_pos = 0
     old_caret_pos = 0
     pixel_width = None
-    default = u""
-    edit_text = u""
+    default = ""
+    edit_text = ""
     value = None
 
     def __init__(self,
@@ -1096,7 +1096,7 @@ class Input(renpy.text.text.Text):  # @UndefinedVariable
             changed = value.set_text
             default = value.get_text()
 
-        self.default = unicode(default)
+        self.default = str(default)
         self.content = self.default
 
         self.length = length
@@ -1182,7 +1182,7 @@ class Input(renpy.text.text.Text):  # @UndefinedVariable
         def set_content(content):
 
             if content == "":
-                content = u"\u200b"
+                content = "\u200b"
 
             if editable:
                 l = len(content)
@@ -1238,7 +1238,7 @@ class Input(renpy.text.text.Text):  # @UndefinedVariable
         if not self.editable:
             return None
 
-        if (ev.type == pygame.KEYDOWN) and (pygame.key.get_mods() & pygame.KMOD_LALT) and (not ev.unicode):
+        if (ev.type == pygame.KEYDOWN) and (pygame.key.get_mods() & pygame.KMOD_LALT) and (not ev.str):
             return None
 
         l = len(self.content)
@@ -1315,8 +1315,8 @@ class Input(renpy.text.text.Text):  # @UndefinedVariable
 
         elif ev.type == pygame.KEYDOWN:
 
-            if ev.unicode and ord(ev.unicode[0]) >= 32:
-                raw_text = ev.unicode
+            if ev.str and ord(ev.str[0]) >= 32:
+                raw_text = ev.str
             elif renpy.display.interface.text_event_in_queue():
                 raw_text = ''
 

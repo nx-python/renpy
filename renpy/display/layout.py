@@ -233,7 +233,7 @@ class Container(renpy.display.core.Displayable):
         if len(offsets) != len(children):
             return None
 
-        for i in xrange(len(offsets) - 1, -1, -1):
+        for i in range(len(offsets) - 1, -1, -1):
 
             d = children[i]
             xo, yo = offsets[i]
@@ -688,9 +688,9 @@ class MultiBox(Container):
             rv = None
 
             if self.style.order_reverse:
-                iterator = zip(reversed(self.children), reversed(csts), reversed(cats))
+                iterator = list(zip(reversed(self.children), reversed(csts), reversed(cats)))
             else:
-                iterator = zip(self.children, csts, cats)
+                iterator = list(zip(self.children, csts, cats))
 
             rv = renpy.display.render.Render(width, height, layer_name=self.layer_name)
 
@@ -978,7 +978,7 @@ class MultiBox(Container):
             if self.layer_name or (self.layers is not None):
                 self.update_times()
 
-        children_offsets = zip(self.children, self.offsets, self.start_times)
+        children_offsets = list(zip(self.children, self.offsets, self.start_times))
 
         if not self.style.order_reverse:
             children_offsets.reverse()
@@ -1232,7 +1232,7 @@ class DynamicDisplayable(renpy.display.core.Displayable):
         super(DynamicDisplayable, self).__init__()
         self.child = None
 
-        if isinstance(function, basestring):
+        if isinstance(function, str):
             args = ( function, )
             kwargs = { }
             function = dynamic_displayable_compat
@@ -1489,7 +1489,7 @@ class Side(Container):
 
         super(Side, self).__init__(style=style, **properties)
 
-        if isinstance(positions, basestring):
+        if isinstance(positions, str):
             positions = positions.split()
 
         seen = set()
