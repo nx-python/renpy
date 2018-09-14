@@ -24,6 +24,7 @@ import os.path
 import sys
 import subprocess
 import io
+import imp
 
 FSENCODING = sys.getfilesystemencoding() or "utf-8"
 
@@ -31,8 +32,8 @@ FSENCODING = sys.getfilesystemencoding() or "utf-8"
 old_stdout = sys.stdout
 old_stderr = sys.stderr
 
-reload(sys)
-sys.setdefaultencoding(FSENCODING)  # @UndefinedVariable
+imp.reload(sys)
+#sys.setdefaultencoding(FSENCODING)  # @UndefinedVariable
 
 sys.stdout = old_stdout
 sys.stderr = old_stderr
@@ -75,8 +76,8 @@ def extra_imports():
     import compiler; compiler
     import textwrap; textwrap
     import copy; copy
-    import urllib; urllib
-    import urllib2; urllib2
+    import urllib.request, urllib.parse, urllib.error; urllib
+    import urllib.request, urllib.error, urllib.parse; urllib2
     import codecs; codecs
     import rsa; rsa
     import decimal; decimal
@@ -89,9 +90,9 @@ def extra_imports():
 
     # Used by requests.
     import cgi; cgi
-    import Cookie; Cookie
+    import http.cookies; Cookie
     import hmac; hmac
-    import Queue; Queue
+    import queue; Queue
     import uuid; uuid
 
 
@@ -162,16 +163,16 @@ def bootstrap(renpy_base):
     import renpy.log  # @UnusedImport
 
     # Remove a legacy environment setting.
-    if os.environ.get(b"SDL_VIDEODRIVER", "") == "windib":
-        del os.environ[b"SDL_VIDEODRIVER"]
-
-    renpy_base = unicode(renpy_base, FSENCODING, "replace")
+    if os.environ.get("SDL_VIDEODRIVER", "") == "windib":
+        del os.environ["SDL_VIDEODRIVER"]
+    if not isinstance(renpy_base, str):
+        renpy_base = str(renpy_base, FSENCODING, "replace")
 
     # If environment.txt exists, load it into the os.environ dictionary.
     if os.path.exists(renpy_base + "/environment.txt"):
         evars = { }
-        execfile(renpy_base + "/environment.txt", evars)
-        for k, v in evars.iteritems():
+        exec(compile(open(renpy_base + "/environment.txt").read(), renpy_base + "/environment.txt", 'exec'), evars)
+        for k, v in evars.items():
             if k not in os.environ:
                 os.environ[k] = str(v)
 
@@ -183,8 +184,8 @@ def bootstrap(renpy_base):
 
         if os.path.exists(alt_path + "/environment.txt"):
             evars = { }
-            execfile(alt_path + "/environment.txt", evars)
-            for k, v in evars.iteritems():
+            exec(compile(open(alt_path + "/environment.txt").read(), alt_path + "/environment.txt", 'exec'), evars)
+            for k, v in evars.items():
                 if k not in os.environ:
                     os.environ[k] = str(v)
 
