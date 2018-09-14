@@ -22,7 +22,7 @@
 # This file encapsulates much of the complexity of the Ren'Py build process,
 # so setup.py can be clean by comparison.
 
-from __future__ import print_function
+
 
 import os
 import sys
@@ -57,7 +57,7 @@ cython_command = os.environ.get("RENPY_CYTHON", "cython")
 # The install variable is a list of directories that have Ren'Py
 # dependencies installed in them.
 if not (android or ios):
-    install = os.environ.get("RENPY_DEPS_INSTALL", "/usr")
+    install = os.environ.get("RENPY_DEPS_INSTALL", "/usr::/usr/local::/usr/local/opt/zlib")
 
     if "::" in install:
         install = install.split("::")
@@ -219,7 +219,7 @@ def cython(name, source=[], libs=[], includes=[], compile_if=True, define_macros
     # Figure out what it depends on.
     deps = [ fn ]
 
-    f = file(fn)
+    f = open(fn)
     for l in f:
 
         m = re.search(r'from\s*([\w.]+)\s*cimport', l)
@@ -314,7 +314,7 @@ def cython(name, source=[], libs=[], includes=[], compile_if=True, define_macros
                 "-o",
                 c_fn])
 
-        except subprocess.CalledProcessError, e:
+        except subprocess.CalledProcessError as e:
             print()
             print(str(e))
             print()
@@ -367,14 +367,14 @@ def copyfile(source, dest, replace=None, replace_with=None):
         if os.path.getmtime(sfn) <= os.path.getmtime(dfn):
             return
 
-    sf = file(sfn, "rb")
+    sf = open(sfn, "rt")
     data = sf.read()
     sf.close()
 
     if replace:
         data = data.replace(replace, replace_with)
 
-    df = file(dfn, "wb")
+    df = open(dfn, "wt")
     df.write("# This file was automatically generated from " + source + "\n")
     df.write("# Modifications will be automatically overwritten.\n\n")
     df.write(data)
