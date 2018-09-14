@@ -63,12 +63,12 @@ class DialogueTextTags(object):
         while True:
 
             try:
-                self.text += i.next()
+                self.text += next(i)
 
-                quoted = i.next()
-                full_tag = i.next()
-                tag = i.next()
-                value = i.next()
+                quoted = next(i)
+                full_tag = next(i)
+                tag = next(i)
+                value = next(i)
 
                 if value is not None:
                     value = float(value)
@@ -162,7 +162,7 @@ def compute_widget_properties(who_args, what_args, window_args, properties, vari
 
         d = d.copy()
 
-        if isinstance(style, basestring):
+        if isinstance(style, str):
 
             if multiple is not None:
                 style = "block{}_multiple{}_{}".format(multiple[0], multiple[1], style)
@@ -251,7 +251,7 @@ def show_display_say(who, what, who_args={}, what_args={}, window_args={},
 
     def merge_style(style, properties):
 
-        if isinstance(style, basestring):
+        if isinstance(style, str):
             style = getattr(renpy.store.style, style)
 
         if variant is not None:
@@ -734,7 +734,7 @@ class ADVCharacter(object):
             self.show_args = kind.show_args.copy()
             self.cb_args = kind.cb_args.copy()
 
-            for k, v in kind.properties.items():
+            for k, v in list(kind.properties.items()):
                 self.properties[k] = dict(v)
 
         else:
@@ -901,10 +901,10 @@ class ADVCharacter(object):
         return renpy.substitutions.substitute(who)[0]
 
     def __str__(self):
-        return unicode(self).encode("utf-8")
+        return str(self).encode("utf-8")
 
     def __format__(self, spec):
-        return format(unicode(self), spec)
+        return format(str(self), spec)
 
     def __repr__(self):
         return "<Character: {!r}>".format(self.name)
@@ -925,7 +925,7 @@ class ADVCharacter(object):
         if not (self.condition is None or renpy.python.py_eval(self.condition)):
             return True
 
-        if not isinstance(what, basestring):
+        if not isinstance(what, str):
             raise Exception("Character expects its what argument to be a string, got %r." % (what,))
 
         # Figure out multiple and final. Multiple is None if this is not a multiple
@@ -1028,7 +1028,7 @@ class ADVCharacter(object):
                     self.do_done(who, what)
 
                 # Finally, log this line of dialogue.
-                if who and isinstance(who, (str, unicode)):
+                if who and isinstance(who, str):
                     renpy.exports.log(who)
 
                 renpy.exports.log(what)
@@ -1113,7 +1113,7 @@ class ADVCharacter(object):
         else:
             h.rollback_identifier = None
 
-        for k, v in kwargs.items():
+        for k, v in list(kwargs.items()):
             setattr(h, k, v)
 
         for i in renpy.config.history_callbacks:
