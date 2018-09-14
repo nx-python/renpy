@@ -37,7 +37,7 @@ def main():
         if old_size == new_size:
             continue
 
-        print "{: 6d} {}".format((new_size - old_size), fn)
+        print("{: 6d} {}".format((new_size - old_size), fn))
 
 if __name__ == "__main__":
     main()

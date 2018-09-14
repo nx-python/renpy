@@ -40,8 +40,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Ren\'Py Developer Guide'
-copyright = u'2011, Ren\'Py Project' #@ReservedAssignment
+project = 'Ren\'Py Developer Guide'
+copyright = '2011, Ren\'Py Project' #@ReservedAssignment
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

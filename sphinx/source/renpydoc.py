@@ -67,7 +67,7 @@ def parse_style_node(env, sig, signode):
     ref = m.group(1)
 
     while ref in style_seen_ids:
-        print "duplicate id:", ref
+        print("duplicate id:", ref)
         ref = ref + "_alt"
 
     style_seen_ids.add(ref)
@@ -87,7 +87,7 @@ class PythonIndex(sphinx.domains.Index):
 
         entries = [ ]
 
-        for name, (docname, kind) in self.domain.data['objects'].iteritems():
+        for name, (docname, kind) in self.domain.data['objects'].items():
 
             if kind == "function" or kind == "class":
                 entries.append((name, 0, docname, name, None, None, ''))
@@ -102,7 +102,7 @@ class PythonIndex(sphinx.domains.Index):
 
             content[c].append((name, subtype, docname, anchor, extra, qualifier, descr))
 
-        for i in content.itervalues():
+        for i in content.values():
             i.sort()
 
         # self.domain.data['labels']["py-function-class-index"] = ("py-function-class-index", '', self.localname)
@@ -124,7 +124,7 @@ class CustomIndex(sphinx.domains.Index):
 
         entries = [ ]
 
-        for (kind, name), (docname, anchor) in self.domain.data["objects"].iteritems():
+        for (kind, name), (docname, anchor) in self.domain.data["objects"].items():
 
             if self.kind != kind:
                 continue
@@ -144,7 +144,7 @@ class CustomIndex(sphinx.domains.Index):
 
             content[c].append((name, subtype, docname, anchor, extra, qualifier, descr))
 
-        for i in content.itervalues():
+        for i in content.values():
             i.sort()
 
         self.domain.data['labels'][self.kind + "-index"] = ("std-" + self.kind + "-index", '', self.localname)

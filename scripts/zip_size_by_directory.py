@@ -29,16 +29,16 @@ def main():
 
     dirsizes = collections.defaultdict(int)
 
-    for k, v in files.items():
+    for k, v in list(files.items()):
         while k:
             k, _, _ = k.rpartition('/')
             dirsizes[k] += v
 
-    sizes = [ (v, k) for (k, v) in dirsizes.items() ]
+    sizes = [ (v, k) for (k, v) in list(dirsizes.items()) ]
     sizes.sort()
 
     for v, k in sizes:
-        print("{: 9d} {}".format(v, k))
+        print(("{: 9d} {}".format(v, k)))
 
 
 if __name__ == "__main__":

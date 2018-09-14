@@ -6,10 +6,10 @@ import collections
 import keyword
 import renpy.sl2
 import shutil
-import StringIO
+import io
 import os
 
-import __builtin__
+import builtins
 
 # Additional keywords in the Ren'Py script language.
 SCRIPT_KEYWORDS = """\
@@ -70,7 +70,7 @@ def script_keywords():
 
     while tries:
         trie = tries.pop(0)
-        for k, v in trie.words.items():
+        for k, v in list(trie.words.items()):
             rv.add(k)
             tries.append(v)
 
@@ -102,7 +102,7 @@ def sl2_regexps():
     groups = collections.defaultdict(set)
     has_style = { }
 
-    for k, v in renpy.sl2.slparser.properties.items():
+    for k, v in list(renpy.sl2.slparser.properties.items()):
         prefix, style = k
 
         has_style[prefix] = style
@@ -144,7 +144,7 @@ def expanded_sl2_properties():
 
     rv = set()
 
-    for k, v in renpy.sl2.slparser.properties.items():
+    for k, v in list(renpy.sl2.slparser.properties.items()):
         prefix, style = k
 
         if prefix == "icon_":
@@ -309,11 +309,11 @@ def scan_section(name, o):
 
 def write_line_buffer():
 
-    for k, v in line_buffer.iteritems():
+    for k, v in line_buffer.items():
 
         # f = file("source/inc/" + k, "w")
 
-        f = StringIO.StringIO()
+        f = io.StringIO()
 
         print(".. Automatically generated file - do not modify.", file=f)
         print(file=f)

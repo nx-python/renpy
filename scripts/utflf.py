@@ -9,8 +9,8 @@ def process(fn):
 
     data = data.decode("utf-8")
     data = data.replace("\r", "")
-    data = data.replace(u"\ufeff", "")
-    data = u"\ufeff" + data
+    data = data.replace("\ufeff", "")
+    data = "\ufeff" + data
     data = data.encode("utf-8")
 
     with open(fn, "wb") as f:
@@ -25,5 +25,5 @@ for directory, dirs, files in os.walk(sys.argv[1]):
         if not fn.endswith(".rpy"):
             continue
 
-        print fn
+        print(fn)
         process(fn)

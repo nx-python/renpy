@@ -29,8 +29,8 @@ def main():
 
     dirsizes = collections.defaultdict(int)
 
-    for k, v in files.items():
-        print("{: 9d} {}".format(v, k))
+    for k, v in list(files.items()):
+        print(("{: 9d} {}".format(v, k)))
 
 
 if __name__ == "__main__":

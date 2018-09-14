@@ -43,8 +43,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Ren\'Py Visual Novel Engine'
-copyright = u'2012-{}, Tom Rothamel'.format(datetime.date.today().year)  # @ReservedAssignment
+project = 'Ren\'Py Visual Novel Engine'
+copyright = '2012-{}, Tom Rothamel'.format(datetime.date.today().year)  # @ReservedAssignment
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -200,8 +200,8 @@ locale_dirs = ["locale/"]
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ('index', 'all.tex', u'Ren\'Py Visual Novel Engine Reference Manual',
-     u'PyTom', 'manual'),
+    ('index', 'all.tex', 'Ren\'Py Visual Novel Engine Reference Manual',
+     'PyTom', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -241,10 +241,10 @@ man_pages = [
 # -- Options for Epub output ---------------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'The Ren\'Py Visual Novel Engine'
-epub_author = u'PyTom'
-epub_publisher = u'PyTom'
-epub_copyright = u'2011, PyTom'
+epub_title = 'The Ren\'Py Visual Novel Engine'
+epub_author = 'PyTom'
+epub_publisher = 'PyTom'
+epub_copyright = '2011, PyTom'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.

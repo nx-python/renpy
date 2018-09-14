@@ -30,22 +30,22 @@ def main():
         if not current_name:
             return
 
-        print
+        print()
 
         if current_parent and current_entries:
-            print "style {} is {}:".format(current_name, current_parent)
+            print("style {} is {}:".format(current_name, current_parent))
         elif current_parent:
-            print "style {} is {}".format(current_name, current_parent)
+            print("style {} is {}".format(current_name, current_parent))
         elif current_entries:
-            print "style {}:".format(current_name)
+            print("style {}:".format(current_name))
         else:
-            print "style {}".format(current_name)
+            print("style {}".format(current_name))
 
         for name, expr in current_entries:
             if expr:
-                print "    {} {}".format(name, expr.strip())
+                print("    {} {}".format(name, expr.strip()))
             else:
-                print "    {}".format(name)
+                print("    {}".format(name))
 
 
     for _fn, _lineno, l in renpy.parser.list_logical_lines(args.script):

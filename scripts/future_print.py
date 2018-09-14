@@ -10,7 +10,7 @@ def process(fn):
 
     for i in lines:
         if "__future__" in i:
-            print("Already in", fn)
+            print(("Already in", fn))
             return
 
     line = 0
@@ -24,7 +24,7 @@ def process(fn):
 
         break
 
-    print(fn, line)
+    print((fn, line))
 
     lines.insert(line, "from __future__ import print_function\n")
     lines.insert(line + 1, "\n")
