@@ -3,7 +3,7 @@ from __future__ import print_function, unicode_literals, division, absolute_impo
 import Cython.Coverage
 import os
 import coverage  # @UnresolvedImport
-import cPickle
+import pickle
 import ast
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -207,7 +207,7 @@ class RenpyReporter(coverage.FileReporter):
             data = renpy.game.script.read_rpyc_data(f, 1)
 
         try:
-            stmts = cPickle.loads(data)[1]
+            stmts = pickle.loads(data)[1]
         except:
             stmts = [ ]
             print(filename + "c", "failed")
