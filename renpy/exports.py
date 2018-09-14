@@ -27,7 +27,7 @@
 from __future__ import print_function
 
 # Remember the real file.
-_file = file
+
 
 import re
 
@@ -398,7 +398,7 @@ def copy_images(old, new):
 
     lenold = len(old)
 
-    for k, v in renpy.display.image.images.items():
+    for k, v in list(renpy.display.image.images.items()):
         if len(k) < lenold:
             continue
 
@@ -1441,7 +1441,7 @@ def with_statement(trans, always=False, paired=None, clear=True):
 
     if isinstance(trans, dict):
 
-        for k, v in trans.items():
+        for k, v in list(trans.items()):
             if k is None:
                 continue
 
@@ -1553,8 +1553,8 @@ def get_all_labels():
     """
     rv = [ ]
 
-    for i in renpy.game.script.namemap.iterkeys():
-        if isinstance(i, basestring):
+    for i in renpy.game.script.namemap.keys():
+        if isinstance(i, str):
             rv.append(i)
 
     return renpy.python.RevertableSet(rv)
@@ -1775,7 +1775,7 @@ def transition(trans, layer=None, always=False, force=False):
     """
 
     if isinstance(trans, dict):
-        for k, v in trans.items():
+        for k, v in list(trans.items()):
             trans(k, v, always=always, force=force)
         return
 
@@ -1959,7 +1959,7 @@ def log(msg):
 
         if not logfile:
             import codecs
-            logfile = _file(renpy.config.log, "a")
+            logfile = open(renpy.config.log, "a")
 
             if not logfile.tell():
                 logfile.write(codecs.BOM_UTF8)
@@ -2383,7 +2383,7 @@ def load_string(s, filename="<string>"):
         old_locked = renpy.config.locked
         renpy.config.locked = False
 
-        stmts, initcode = renpy.game.script.load_string(filename, unicode(s))
+        stmts, initcode = renpy.game.script.load_string(filename, str(s))
 
         if stmts is None:
             return None
