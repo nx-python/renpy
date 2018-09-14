@@ -464,7 +464,7 @@ class CodeGen(object):
             if old == text:
                 return
 
-        with open(self.filename, "wb") as f:
+        with open(self.filename, "wt") as f:
             f.write(text)
 
     def write(self, s, *args, **kwargs):
