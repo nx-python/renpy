@@ -21,7 +21,7 @@
 
 from __future__ import print_function, unicode_literals, division, absolute_import
 
-str = unicode  # @ReservedAssignment
+str = str  # @ReservedAssignment
 
 import collections
 import os
@@ -29,7 +29,7 @@ import os
 try:
     from io import StringIO  # @UnusedImport
 except:
-    from StringIO import StringIO  # @Reimport
+    from io import StringIO  # @Reimport
 
 # Paths
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -427,7 +427,7 @@ synthetic_properties = sorted_dict(
 
 all_properties = collections.OrderedDict()
 
-for k, v in style_properties.items():
+for k, v in list(style_properties.items()):
     all_properties[k] = [ (k, None) ]
 
 all_properties.update(synthetic_properties)
@@ -496,7 +496,7 @@ def generate_constants():
     g.write("DEF PREFIX_COUNT = {}", PREFIX_COUNT)
     g.write("DEF STYLE_PROPERTY_COUNT = {}", style_property_count)
 
-    for p in prefixes.values():
+    for p in list(prefixes.values()):
         if p.index < 0:
             continue
 
@@ -561,13 +561,13 @@ def generate_property_functions():
     This generates code that defines the property functions.
     """
 
-    for prefix in sorted(prefixes.values(), key=lambda p : p.index):
+    for prefix in sorted(list(prefixes.values()), key=lambda p : p.index):
         g = CodeGen(module_gen + "/style_{}functions.pyx".format(prefix.name))
 
         g.write('include "style_common.pxi"')
         g.write('')
 
-        for propname, proplist in all_properties.items():
+        for propname, proplist in list(all_properties.items()):
             generate_property_function(g, prefix, propname, proplist)
 
         g.close()
@@ -626,13 +626,13 @@ def generate_sets():
 
     ap = collections.OrderedDict()
 
-    for k, v in all_properties.items():
+    for k, v in list(all_properties.items()):
         ap[k] = [ i[0] for i in v ]
 
     prefix_priority = collections.OrderedDict()
     prefix_alts = collections.OrderedDict()
 
-    for p in prefixes.values():
+    for p in list(prefixes.values()):
         prefix_priority[p.name] = p.priority
         prefix_alts[p.name] = p.alt_names
 
