@@ -628,7 +628,18 @@ def py_compile(source, mode, filename='<none>', lineno=1, ast_node=False, cache=
     source = str(source)
     source = source.replace("\r", "")
     source = escape_unicode(source)
-
+    if "for i in" in source:
+        from renpy.py2to3ports import FixParens
+        source = FixParens(source)
+    if "urllib" in source:
+        from renpy.py2to3ports import FixUrllib
+        source = FixUrllib(source)
+    if "unicode(" in source:
+        from renpy.py2to3ports import FixUnicode
+        source = FixUnicode(source)
+    if "exec " in source:
+        from renpy.py2to3ports import FixExecStatment
+        source = FixExecStatment(source)
     try:
         line_offset = lineno - 1
 
@@ -799,7 +810,7 @@ class RevertableList(list):
         list.__init__(self, *args)
 
     __delitem__ = mutator(list.__delitem__)
-    __delslice__ = mutator(list.__delslice__)
+    #__delslice__ = mutator(list.__delslice__)
     __setitem__ = mutator(list.__setitem__)
     __iadd__ = mutator(list.__iadd__)
     __imul__ = mutator(list.__imul__)
@@ -819,7 +830,7 @@ class RevertableList(list):
         return newmethod
 
     __add__ = wrapper(list.__add__)
-    __getslice__ = wrapper(list.__getslice__)
+    #__getslice__ = wrapper(list.__getslice__)
 
     def __mul__(self, other):
         if not isinstance(other, int):
