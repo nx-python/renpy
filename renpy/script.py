@@ -107,7 +107,7 @@ class Script(object):
         renpy.game.script = self
 
         if os.path.exists(renpy.config.renpy_base + "/lock.txt"):
-            self.key = file(renpy.config.renpy_base + "/lock.txt", "rb").read()
+            self.key = open(renpy.config.renpy_base + "/lock.txt", "rt").read()
         else:
             self.key = None
 
@@ -135,7 +135,7 @@ class Script(object):
 
         self.serial = 0
 
-        self.digest = hashlib.md5(renpy.version_only)
+        self.digest = hashlib.md5(renpy.version_only.encode('utf-8'))
 
         self.loaded_rpy = False
         self.backup_list = [ ]
@@ -460,7 +460,7 @@ class Script(object):
         Writes an empty version 2 .rpyc header to the open binary file `f`.
         """
 
-        f.write(RPYC2_HEADER)
+        f.write(RPYC2_HEADER.encode("utf-8"))
 
         for _i in range(3):
             f.write(struct.pack("III", 0, 0, 0))
@@ -477,7 +477,7 @@ class Script(object):
         data = zlib.compress(data, 9)
         f.write(data)
 
-        f.seek(len(RPYC2_HEADER) + 12 * (slot - 1), 0)
+        f.seek(len(RPYC2_HEADER.encode("utf-8")) + 12 * (slot - 1), 0)
         f.write(struct.pack("III", slot, start, len(data)))
 
         f.seek(0, 2)
@@ -502,7 +502,7 @@ class Script(object):
         # header = f.read(len(RPYC2_HEADER))
 
         # Legacy path.
-        if header_data[:len(RPYC2_HEADER)] != RPYC2_HEADER:
+        if header_data[:len(RPYC2_HEADER)] != RPYC2_HEADER.encode("utf-8"):
             if slot != 1:
                 return None
 
@@ -583,7 +583,7 @@ class Script(object):
             if not renpy.macapp:
 
                 try:
-                    f = file(rpycfn, "wb")
+                    f = open(rpycfn, "wb")
 
                     self.write_rpyc_header(f)
                     self.write_rpyc_data(f, 1, dumps((data, stmts), 2))
@@ -597,8 +597,8 @@ class Script(object):
                 try:
                     self.write_rpyc_data(f, 2, dumps((data, stmts), 2))
 
-                    with open(fullfn, "rU") as fullf:
-                        rpydigest = hashlib.md5(fullf.read()).digest()
+                    with open(fullfn, "r", newline='') as fullf:
+                        rpydigest = hashlib.md5(fullf.read().encode("utf-8")).digest()
 
                     self.write_rpyc_md5(f, rpydigest)
 
@@ -685,8 +685,8 @@ class Script(object):
             renpy.loader.add_auto(rpyfn)
 
             if os.path.exists(rpyfn):
-                with open(rpyfn, "rU") as f:
-                    rpydigest = hashlib.md5(f.read()).digest()
+                with open(rpyfn, "r", newline='') as f:
+                    rpydigest = hashlib.md5(f.read().encode("utf-8")).digest()
             else:
                 rpydigest = None
 
@@ -816,11 +816,6 @@ class Script(object):
 
                     if text is None:
                         text = ''
-
-                    try:
-                        text = text.decode("utf-8")
-                    except:
-                        text = text.decode("latin-1")
 
                     pem = renpy.parser.ParseError(
                         filename=e.filename,
