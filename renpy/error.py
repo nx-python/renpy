@@ -24,7 +24,7 @@
 from __future__ import print_function
 import traceback
 import sys
-import cStringIO
+import io
 import platform
 import linecache
 import time
@@ -53,13 +53,15 @@ def write_utf8_traceback_list(out, l):
         # Assume what is in a unicode encoding, since it is either python,
         # or comes from inside Ren'Py.
 
-        if isinstance(text, str):
+        if not isinstance(text, str):
             text = text.decode("utf-8", "replace")
 
         ul.append((filename, line, what, text))
 
     for t in traceback.format_list(ul):
-        out.write(t.encode("utf-8", "replace"))
+        if not isinstance(t, str):
+            t = t.decode("utf-8", "replace")
+        out.write(t)
 
 
 def traceback_list(tb):
@@ -133,13 +135,13 @@ def open_error_file(fn, mode):
 
     try:
         new_fn = os.path.join(renpy.config.logdir, fn)
-        f = file(new_fn, mode)
+        f = open(new_fn, mode)
         return f, new_fn
     except:
         pass
 
     try:
-        f = file(fn, mode)
+        f = open(fn, mode)
         return f, fn
     except:
         pass
@@ -147,7 +149,7 @@ def open_error_file(fn, mode):
     import tempfile
 
     new_fn = os.path.join(tempfile.gettempdir(), "renpy-" + fn)
-    return file(new_fn, mode), new_fn
+    return open(new_fn, mode), new_fn
 
 
 def report_exception(e, editor=True):
@@ -162,7 +164,7 @@ def report_exception(e, editor=True):
 
     # Note: Doki Doki Literature club calls this as ("Words...", False).
     # For what it's worth.
-
+    traceback_fn = ""
     import codecs
 
     type, _value, tb = sys.exc_info()  # @ReservedAssignment
@@ -252,4 +254,4 @@ def report_exception(e, editor=True):
     except:
         pass
 
-    return simple.decode("utf-8", "replace"), full.decode("utf-8", "replace"), traceback_fn
+    return simple, full, traceback_fn
