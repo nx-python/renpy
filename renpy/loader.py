@@ -394,7 +394,7 @@ class SubFile(object):
     def __iter__(self):
         return self
 
-    def next(self):  # @ReservedAssignment
+    def __next__(self):  # @ReservedAssignment
         rv = self.readline()
 
         if not rv:
