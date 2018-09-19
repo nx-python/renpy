@@ -618,7 +618,7 @@ def transfn(name):
 
     name = lower_map.get(name.lower(), name)
 
-    if isinstance(name, str):
+    if not isinstance(name, str):
         name = name.decode("utf-8")
 
     for d in renpy.config.searchpath:
