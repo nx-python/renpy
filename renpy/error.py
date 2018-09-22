@@ -186,7 +186,7 @@ def report_exception(e, editor=True):
                 except:
                     m = "<Could not encode exception.>"
 
-        if isinstance(m, str):
+        if not isinstance(m, str):
             return m.encode("utf-8", "replace")
         else:
             return m
