@@ -39,7 +39,7 @@ import sys
 import time
 
 import renpy.audio
-
+import renpy.py2to3ports as Fixes
 ##############################################################################
 # Code that implements the store.
 
@@ -628,18 +628,7 @@ def py_compile(source, mode, filename='<none>', lineno=1, ast_node=False, cache=
     source = str(source)
     source = source.replace("\r", "")
     source = escape_unicode(source)
-    if "for i in" in source:
-        from renpy.py2to3ports import FixParens
-        source = FixParens(source)
-    if "urllib" in source:
-        from renpy.py2to3ports import FixUrllib
-        source = FixUrllib(source)
-    if "unicode(" in source:
-        from renpy.py2to3ports import FixUnicode
-        source = FixUnicode(source)
-    if "exec " in source:
-        from renpy.py2to3ports import FixExecStatment
-        source = FixExecStatment(source)
+    source = Fixes.PerformFixes(source)
     try:
         line_offset = lineno - 1
 
