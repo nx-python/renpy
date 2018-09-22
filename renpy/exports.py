@@ -3010,7 +3010,7 @@ def fsencode(s):
     Converts s from unicode to the filesystem encoding.
     """
 
-    if not isinstance(s, str):
+    if isinstance(s, str):
         return s
 
     fsencoding = sys.getfilesystemencoding() or "utf-8"
