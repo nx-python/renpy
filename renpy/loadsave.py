@@ -179,7 +179,7 @@ def save_dump(roots, log):
 
         return size
 
-    f = file("save_dump.txt", "w")
+    f = open("save_dump.txt", "w")
 
     visit(roots, "roots")
     visit(log, "log")
@@ -356,7 +356,7 @@ class SaveRecord(object):
         zf.writestr("screenshot.png", self.screenshot)
 
         # Extra info.
-        zf.writestr("extra_info", self.extra_info.encode("utf-8"))
+        zf.writestr("extra_info", self.extra_info)
 
         # Json
         zf.writestr("json", self.json)
