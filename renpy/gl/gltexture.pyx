@@ -32,7 +32,6 @@ from sdl2 cimport *
 from pygame_sdl2 cimport *
 import_pygame_sdl2()
 
-from cpython.string cimport PyString_FromStringAndSize
 from libc.stdlib cimport calloc, free
 
 import sys
@@ -1184,7 +1183,8 @@ def premultiply(
         alpha = False
 
     # Allocate an uninitialized string.
-    rv = PyString_FromStringAndSize(<char *>NULL, w * h * 4)
+    cdef char* c_string = NULL
+    rv = str(c_string[:(w * h * 4)])
 
     # Out is where we put the output.
     cdef unsigned char *out = rv
