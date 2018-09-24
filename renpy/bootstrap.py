@@ -203,7 +203,10 @@ def bootstrap(renpy_base):
         enable_trace(args.trace)
 
     if args.basedir:
-        basedir = os.path.abspath(args.basedir).decode(FSENCODING)
+        if not isinstance(args.basedir,str):
+            basedir = os.path.abspath(args.basedir).decode(FSENCODING)
+        else:
+            basedir = os.path.abspath(args.basedir)
     else:
         basedir = renpy_base
 
