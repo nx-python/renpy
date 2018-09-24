@@ -52,7 +52,6 @@ __contact__ = 'ero@dkbza.org'
 import struct
 import time
 import math
-import exceptions
 import string
 import array
 
