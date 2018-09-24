@@ -628,7 +628,7 @@ def py_compile(source, mode, filename='<none>', lineno=1, ast_node=False, cache=
     source = str(source)
     source = source.replace("\r", "")
     source = escape_unicode(source)
-    source = Fixes.PerformFixes(source)
+    source = Fixes.PerformFixes(source, filename)
     try:
         line_offset = lineno - 1
 
