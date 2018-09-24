@@ -1440,7 +1440,7 @@ class Text(renpy.display.core.Displayable):
 
         return rv
 
-    def __unicode__(self):
+    def __str__(self):
         s = ""
 
         for i in self.text:

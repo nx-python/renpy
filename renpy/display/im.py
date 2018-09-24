@@ -604,7 +604,7 @@ class Image(ImageBase):
         super(Image, self).__init__(filename, **properties)
         self.filename = filename
 
-    def __unicode__(self):
+    def __str__(self):
         if len(self.filename) < 20:
             return "Image %r" % self.filename
         else:
@@ -671,7 +671,7 @@ class Data(ImageBase):
         self.data = data
         self.filename = filename
 
-    def __unicode__(self):
+    def __str__(self):
         return "im.Data(%r)" % self.filename
 
     def load(self):

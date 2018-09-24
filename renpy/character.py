@@ -891,7 +891,7 @@ class ADVCharacter(object):
             # Otherwise, just record the attributes of the image.
             images.predict_show("master", tagged_attrs, show=False)
 
-    def __unicode__(self):
+    def __str__(self):
 
         who = self.name
 
@@ -899,9 +899,6 @@ class ADVCharacter(object):
             who = renpy.python.py_eval(who)
 
         return renpy.substitutions.substitute(who)[0]
-
-    def __str__(self):
-        return str(self).encode("utf-8")
 
     def __format__(self, spec):
         return format(str(self), spec)

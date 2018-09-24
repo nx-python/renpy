@@ -691,7 +691,7 @@ class DragGroup(renpy.display.layout.MultiBox):
 
     _list_type = renpy.python.RevertableList
 
-    def __unicode__(self):
+    def __str__(self):
         return "DragGroup"
 
     def __init__(self, *children, **properties):

@@ -602,7 +602,7 @@ class MultiBox(Container):
 
         return rv
 
-    def __unicode__(self):
+    def __str__(self):
         layout = self.style.box_layout
 
         if layout is None:
