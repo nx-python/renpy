@@ -1,90 +1,98 @@
-from lib2to3.refactor import RefactoringTool, get_fixers_from_package
-import re
+from lib2to3.refactor import RefactoringTool as _RefactoringTool
 
 
 def FixParens(codeContents):
-    refactoring_tool = RefactoringTool(fixer_names=['lib2to3.fixes.fix_paren'])
+    refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_paren'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
 def FixUrllib(codeContents):
-    refactoring_tool = RefactoringTool(fixer_names=['lib2to3.fixes.fix_urllib'])
+    refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_urllib'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
 def FixUnicode(codeContents):
-    refactoring_tool = RefactoringTool(fixer_names=['lib2to3.fixes.fix_unicode'])
+    refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_unicode'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
 def FixExecStatment(codeContents):
-    refactoring_tool = RefactoringTool(fixer_names=['lib2to3.fixes.fix_exec'])
+    refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_exec'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
 def FixNumLiterals(codeContents):
-    refactoring_tool = RefactoringTool(fixer_names=['lib2to3.fixes.fix_numliterals'])
+    refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_numliterals'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
 def FixPrintStatement(codeContents):
-    refactoring_tool = RefactoringTool(fixer_names=['lib2to3.fixes.fix_print'])
+    refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_print'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
 def FixExceptStatement(codeContents):
-    refactoring_tool = RefactoringTool(fixer_names=['lib2to3.fixes.fix_except'])
+    refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_except'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
 def FixXrange(codeContents):
-    refactoring_tool = RefactoringTool(fixer_names=['lib2to3.fixes.fix_xrange'])
+    refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_xrange'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
 def FixBasestring(codeContents):
-    refactoring_tool = RefactoringTool(fixer_names=['lib2to3.fixes.fix_basestring'])
+    refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_basestring'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
 def FixImports(codeContents):
-    refactoring_tool = RefactoringTool(fixer_names=['lib2to3.fixes.fix_imports'])
+    refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_imports'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
 def FixDict(codeContents):
-    refactoring_tool = RefactoringTool(fixer_names=['lib2to3.fixes.fix_dict'])
+    refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_dict'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
 def FixFunctionAttribs(codeContents):
-    refactoring_tool = RefactoringTool(fixer_names=['lib2to3.fixes.fix_funcattrs'])
+    refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_funcattrs'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
+def FixImportsRelativity(codeContents,FileName):
+    refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_import'])
+    node3 = refactoring_tool.refactor_string(codeContents, FileName)
+    return str(node3)
+
 def GenericReplacements(codeContents):
-    inner_code = codeContents
+    import re
+    inner_code: str = codeContents
     if "b\"" in inner_code:
         inner_code = re.sub(r'os\.environ\.get\(b', "os.environ.get(", inner_code)
     if "basestring)" in inner_code:
         inner_code = re.sub(r"basestring\)", "str)", inner_code)
+    if " file(" in inner_code:
+        inner_code = re.sub(r" file\(", " open(", inner_code)
     return inner_code
 
 
-def PerformFixes(codeContents):
-    inner_code = codeContents
+def PerformFixes(codeContents, Filename):
+    import re
+    inner_code: str = codeContents
     if re.search(r"(for \w* in )", inner_code, re.IGNORECASE | re.MULTILINE):
         inner_code = FixParens(inner_code)
     if re.search(r"(= 0[0-9]+)", inner_code, re.IGNORECASE | re.MULTILINE):
@@ -104,6 +112,8 @@ def PerformFixes(codeContents):
     if "xrange" in inner_code:
         inner_code = FixXrange(inner_code)
     if "urlparse" in inner_code:
+        inner_code = FixImports(inner_code)
+    if "cPickle" in inner_code:
         inner_code = FixImports(inner_code)
     if "iteritems" in inner_code:
         inner_code = FixDict(inner_code)
