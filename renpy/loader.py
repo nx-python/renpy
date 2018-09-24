@@ -683,7 +683,7 @@ class RenpyImporter(object):
             prefix = self.prefix
 
         try:
-            fn = (prefix + fullname.replace(".", "/")).decode("utf8")
+            fn = (prefix + fullname.replace(".", "/"))
         except:
             # raise Exception("Could importer-translate %r + %r" % (prefix, fullname))
             return None
@@ -720,10 +720,8 @@ class RenpyImporter(object):
         source = load(filename).read().decode("utf8")
         if source and source[0] == '\ufeff':
             source = source[1:]
-        source = source.encode("raw_unicode_escape")
 
         source = source.replace("\r", "")
-
         code = compile(source, filename, 'exec', renpy.python.old_compile_flags, 1)
         exec(code, mod.__dict__)
 
