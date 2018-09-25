@@ -131,7 +131,7 @@ def save_dump(roots, log):
                 size += visit(v, "{0}[{1!r}]".format(path, k))
 
         elif isinstance(o, types.MethodType):
-            size = 1 + visit(o.__self__, path + ".im_self")
+            size = 1 + visit(o.__self__, path + ".__self__")
 
         else:
 
@@ -218,7 +218,7 @@ def find_bad_reduction(roots, log):
                     return rv
 
         elif isinstance(o, types.MethodType):
-            return visit(o.__self__, path + ".im_self")
+            return visit(o.__self__, path + ".__self__")
 
         elif isinstance(o, types.ModuleType):
 
