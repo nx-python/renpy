@@ -594,7 +594,7 @@ def load_face(fn):
                     for _flags, ffn in v.items():
                         for i in fonts:
                             if ffn.lower().endswith(i):
-                                font_file = file(ffn, "rb")
+                                font_file = open(ffn, "rb")
                                 break
 
                         if font_file:
