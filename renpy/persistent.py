@@ -191,8 +191,8 @@ def load(filename):
 
     # Unserialize the persistent data.
     try:
-        f = file(filename, "rb")
-        s = f.read().decode("zlib")
+        f = open(filename, "rb")
+        s = f.read()
         f.close()
         persistent = loads(s)
     except:
@@ -336,7 +336,7 @@ def merge(other):
 
 
 # The mtime of the most recently processed savefile.
-persistent_mtime = None
+persistent_mtime = (2**63 - 1)
 
 
 def check_update():
@@ -403,7 +403,7 @@ def save():
         return
 
     try:
-        data = dumps(renpy.game.persistent).encode("zlib")
+        data = dumps(renpy.game.persistent)
         renpy.loadsave.location.save_persistent(data)
     except:
         if renpy.config.developer:
@@ -435,7 +435,7 @@ class _MultiPersistent(object):
     def save(self):
 
         fn = self._filename
-        f = file(fn + ".new", "wb")
+        f = open(fn + ".new", "wb")
         dump(self, f)
         f.close()
 
@@ -490,7 +490,7 @@ def MultiPersistent(name):
             break
 
     try:
-        rv = loads(file(fn, "rb").read())
+        rv = loads(open(fn, "rb").read())
     except:
         rv = _MultiPersistent()
 
