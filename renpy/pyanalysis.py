@@ -477,12 +477,6 @@ class Analysis(object):
                 consts.append(check_nodes(node.args))
                 consts.append(check_nodes(i.value for i in node.keywords))
 
-                if node.starargs is not None:
-                    consts.append(check_node(node.starargs))
-
-                if node.kwargs is not None:
-                    consts.append(check_node(node.kwargs))
-
                 return min(consts)
 
             elif isinstance(node, ast.IfExp):
@@ -507,7 +501,7 @@ class Analysis(object):
                     check_nodes(node.comparators),
                     )
 
-            elif isinstance(node, ast.Repr):
+            elif isinstance(node, ast.NameConstant):
                 return check_node(node.value)
 
             elif isinstance(node, ast.Subscript):
