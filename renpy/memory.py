@@ -117,7 +117,7 @@ def cycle_finder(o, name):
                 visit(ido, v, "{0}[{1!r}]".format(path, k))
 
         elif isinstance(o, types.MethodType):
-            visit(ido, o.__self__, path + ".im_self")
+            visit(ido, o.__self__, path + ".__self__")
 
         else:
 
