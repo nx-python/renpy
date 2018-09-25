@@ -794,7 +794,6 @@ class Structure:
 
         return struct.pack(self.__format__, *new_values)
 
-
     def __str__(self):
         return '\n'.join( self.dump() )
 
@@ -1391,7 +1390,7 @@ class PE:
         """
 
         if fname:
-            fd = file(fname, 'rb')
+            fd = open(fname, 'rb')
             self.__data__ = fd.read()
             fd.close()
         elif data:
@@ -1744,7 +1743,7 @@ class PE:
         new_file_data = ''.join( [ chr(ord(c)) for c in file_data] )
 
         if filename:
-            f = file(filename, 'wb+')
+            f = open(filename, 'wb+')
             f.write(new_file_data)
             f.close()
         else:
