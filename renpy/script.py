@@ -196,7 +196,7 @@ class Script(object):
             base, ext = os.path.splitext(short_fn)
             target_fn = os.path.join(
                 backupdir,
-                base + "." + checksum[:8].encode("hex") + ext,
+                base + "." + checksum[:8].hex() + ext,
                 )
 
             if os.path.exists(target_fn):
