@@ -337,8 +337,8 @@ def compile_program(vertex, fragment):
     Compiles a pair of shaders into a program.
     """
 
-    vertex_shader = compile_shader(GL_VERTEX_SHADER_ARB, vertex)
-    fragment_shader = compile_shader(GL_FRAGMENT_SHADER_ARB, fragment)
+    vertex_shader = compile_shader(GL_VERTEX_SHADER_ARB, bytes(vertex,"utf-8"))
+    fragment_shader = compile_shader(GL_FRAGMENT_SHADER_ARB, bytes(fragment,"utf-8"))
 
     program = glCreateProgramObjectARB()
 
