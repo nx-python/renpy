@@ -554,9 +554,6 @@ def reload_all():
     import renpy.style
     import renpy.display
 
-    # Clear all pending exceptions.
-    sys.exc_clear()
-
     # Reset the styles.
     renpy.style.reset()  # @UndefinedVariable
 
