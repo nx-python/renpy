@@ -57,7 +57,7 @@ cdef extern from "renpysound_core.h":
 
 
 def check_error():
-    e = RPS_get_error();
+    e = RPS_get_error().decode("utf-8")
 
     if str(e):
         raise Exception(e)
