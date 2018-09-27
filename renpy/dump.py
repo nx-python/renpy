@@ -130,7 +130,7 @@ def dump(error):
         if not isinstance(name, str):
             continue
 
-        if not list(filter(name, filename)):
+        if not filter(name, filename):
             continue
 
         label[name] = [ filename, line ]
@@ -139,7 +139,7 @@ def dump(error):
     define = location["define"] = { }
 
     for name, filename, line in definitions:
-        if not list(filter(name, filename)):
+        if not filter(name, filename):
             continue
 
         define[name] = [ filename, line ]
@@ -148,7 +148,7 @@ def dump(error):
     screen = location["screen"] = { }
 
     for name, filename, line in screens:
-        if not list(filter(name, filename)):
+        if not filter(name, filename):
             continue
 
         screen[name] = [ filename, line ]
@@ -157,7 +157,7 @@ def dump(error):
     transform = location["transform"] = { }
 
     for name, filename, line in transforms:
-        if not list(filter(name, filename)):
+        if not filter(name, filename):
             continue
 
         transform[name] = [ filename, line ]
