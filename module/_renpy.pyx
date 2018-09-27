@@ -156,9 +156,8 @@ def map(pysrc, pydst, r, g, b, a): # @ReservedAssignment
 
     # pysrc.lock()
     # pydst.lock()
-
     if pysrc.get_bitsize() == 32:
-        map32_core(pysrc, pydst, r, g, b, a)
+        map32_core(pysrc, pydst, r.encode("utf-8"), g.encode("utf-8"), b.encode("utf-8"), a.encode("utf-8"))
     else:
         map24_core(pysrc, pydst, r, g, b)
 
