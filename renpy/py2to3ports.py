@@ -105,6 +105,8 @@ def GenericReplacements(codeContents):
         inner_code = re.sub(r" file\(", " open(", inner_code)
     if "unicode(" in inner_code:
         inner_code = re.sub(r" unicode\("," str(", inner_code)
+    if "\"/usr/bin/python\"" in inner_code:
+        inner_code = re.sub(r"\"/usr/bin/python\"", "sys.executable", inner_code)
     return inner_code
 
 
