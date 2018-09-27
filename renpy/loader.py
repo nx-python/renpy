@@ -453,7 +453,7 @@ if "RENPY_FORCE_SUBFILE" in os.environ:
         return SubFile(f, 0, length, '')
 
 
-def load_core(name):
+def load_core(name, ReadType="b"):
     """
     Returns an open python file object of the given type.
     """
@@ -478,7 +478,7 @@ def load_core(name):
     if not renpy.config.force_archives:
         try:
             fn = transfn(name)
-            return open_file(fn, "rb")
+            return open_file(fn, ("r"+ReadType))
         except:
             pass
 
@@ -505,7 +505,7 @@ def load_core(name):
 
         # Compatibility path.
         else:
-            f = open(afn, "rb")
+            f = open(afn, ("r"+ReadType))
 
             for offset, dlen in index[name]:
                 f.seek(offset)
@@ -541,7 +541,7 @@ def get_prefixes(tl=True):
     return rv
 
 
-def load(name, tl=True):
+def load(name, tl=True, ReadType="b"):
 
     if renpy.display.predict.predicting:  # @UndefinedVariable
         if threading.current_thread().name == "MainThread":
@@ -553,7 +553,7 @@ def load(name, tl=True):
     name = re.sub(r'/+', '/', name).lstrip('/')
 
     for p in get_prefixes(tl):
-        rv = load_core(p + name)
+        rv = load_core(p + name, ReadType)
         if rv is not None:
             return rv
 

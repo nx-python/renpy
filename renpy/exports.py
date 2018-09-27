@@ -2105,13 +2105,13 @@ def open(fn):  # @ReservedAssignment
     return renpy.loader.load(fn)
 
 
-def notl_file(fn):  # @ReservedAssignment
+def notl_file(fn,ReadType="b"):  # @ReservedAssignment
     """
     :undocumented:
 
     Like file, but doesn't search the translation prefix.
     """
-    return renpy.loader.load(fn, tl=False)
+    return renpy.loader.load(fn, tl=False, ReadType=ReadType)
 
 
 @renpy_pure
