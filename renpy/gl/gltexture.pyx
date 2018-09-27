@@ -34,6 +34,10 @@ import_pygame_sdl2()
 
 cdef extern from "<py3c/py3c.h>":
     object PyStr_FromStringAndSize(const char *u, Py_ssize_t len)
+
+cdef extern from "Python.h":
+    object PyByteArray_FromStringAndSize(const char *string, Py_ssize_t len)
+
 from libc.stdlib cimport calloc, free
 
 import sys
@@ -634,7 +638,7 @@ def compute_subrow(row, offset, width):
     outtile = 0
 
     try:
-        ioff, iwidth, itile = rowi.next()
+        ioff, iwidth, itile = rowi.__next__()
 
         # Consume the offset.
         while True:
@@ -645,7 +649,7 @@ def compute_subrow(row, offset, width):
 
 
             offset -= iwidth
-            ioff, iwidth, itile = rowi.next()
+            ioff, iwidth, itile = rowi.__next__()
 
         # Consume the width.
         while True:
@@ -662,7 +666,7 @@ def compute_subrow(row, offset, width):
 
             width -= iwidth
 
-            ioff, iwidth, itile = rowi.next()
+            ioff, iwidth, itile = rowi.__next__()
 
     except StopIteration:
         pass
@@ -1185,8 +1189,7 @@ def premultiply(
         alpha = False
 
     # Allocate an uninitialized string.
-    rv = PyStr_FromStringAndSize(<char *>NULL, w * h * 4)
-
+    rv = PyByteArray_FromStringAndSize(<char *>NULL, w * h * 4)
     # Out is where we put the output.
     cdef unsigned char *out = rv
 
