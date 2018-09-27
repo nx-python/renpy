@@ -1205,8 +1205,8 @@ class SceneLists(renpy.object.Object):
         time with the given time.
         """
 
-        for l, (t, list) in list(self.layer_at_list.items()):  # @ReservedAssignment
-            self.layer_at_list[l] = (t or time, list)
+        for l, (t, list2) in list(self.layer_at_list.items()):  # @ReservedAssignment
+            self.layer_at_list[l] = (t or time, list2)
 
         for l, ll in self.layers.items():
             self.layers[l] = [ i.update_time(time) for i in ll ]
