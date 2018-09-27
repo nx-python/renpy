@@ -306,6 +306,7 @@ def cython(name, source=[], libs=[], includes=[], compile_if=True, define_macros
 
             subprocess.check_call([
                 cython_command,
+                "-3",
                 "-Iinclude",
                 "-I" + gen,
                 "-I..",
