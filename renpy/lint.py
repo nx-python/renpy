@@ -651,8 +651,7 @@ def lint():
 
     renpy.game.lint = True
 
-    print(codecs.BOM_UTF8)
-    print(str(renpy.version + " lint report, generated at: " + time.ctime()).encode("utf-8"))
+    print(str(renpy.version + " lint report, generated at: " + time.ctime()))
 
     # This supports check_hide.
     global image_prefixes
@@ -665,7 +664,7 @@ def lint():
     # them. We sort them in filename, linenumber order.
 
     all_stmts = [ (i.filename, i.linenumber, i) for i in renpy.game.script.all_stmts ]
-    all_stmts.sort()
+    all_stmts.sort(key=lambda tup: (tup[0], tup[1]))
 
     # The current count.
     counts = collections.defaultdict(Count)
@@ -796,7 +795,7 @@ characters per block. """.format(
 
     for l in lines:
         for ll in textwrap.wrap(l, 78):
-            print(ll.encode("utf-8"))
+            print(ll)
 
         print()
 
