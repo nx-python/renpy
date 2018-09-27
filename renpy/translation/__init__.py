@@ -253,7 +253,7 @@ class Restructurer(object):
 
         for i in block:
             code = i.get_code()
-            md5.update(code.encode("utf-8") + "\r\n")
+            md5.update((code + "\r\n").encode("utf-8"))
 
         digest = md5.hexdigest()[:8]
 
