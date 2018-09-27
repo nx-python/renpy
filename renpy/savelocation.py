@@ -380,7 +380,8 @@ class MultiLocation(object):
                 continue
 
             slot_mtime = l.mtime(slotname)
-
+            if slot_mtime is None:
+                slot_mtime = -1
             if slot_mtime > mtime:
                 mtime = slot_mtime
                 location = l
