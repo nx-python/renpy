@@ -1,7 +1,6 @@
-from lib2to3.refactor import RefactoringTool as _RefactoringTool
 
 
-def FixParens(codeContents):
+def FixParens(codeContents,_RefactoringTool):
     refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_paren'])
     try:
         node3 = refactoring_tool.refactor_string(codeContents, 'script')
@@ -10,67 +9,67 @@ def FixParens(codeContents):
         return codeContents
 
 
-def FixUrllib(codeContents):
+def FixUrllib(codeContents,_RefactoringTool):
     refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_urllib'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
-def FixUnicode(codeContents):
+def FixUnicode(codeContents,_RefactoringTool):
     refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_unicode'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
-def FixExecStatment(codeContents):
+def FixExecStatment(codeContents,_RefactoringTool):
     refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_exec'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
-def FixNumLiterals(codeContents):
+def FixNumLiterals(codeContents,_RefactoringTool):
     refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_numliterals'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
-def FixPrintStatement(codeContents):
+def FixPrintStatement(codeContents,_RefactoringTool):
     refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_print'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
-def FixExceptStatement(codeContents):
+def FixExceptStatement(codeContents,_RefactoringTool):
     refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_except'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
-def FixXrange(codeContents):
+def FixXrange(codeContents,_RefactoringTool):
     refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_xrange'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
-def FixBasestring(codeContents):
+def FixBasestring(codeContents,_RefactoringTool):
     refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_basestring'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
-def FixImports(codeContents):
+def FixImports(codeContents,_RefactoringTool):
     refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_imports'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
-def FixDict(codeContents):
+def FixDict(codeContents,_RefactoringTool):
     refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_dict'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
-def FixFunctionAttribs(codeContents):
+def FixFunctionAttribs(codeContents,_RefactoringTool):
     refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_funcattrs'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
@@ -82,13 +81,13 @@ def FixImportsRelativity(codeContents, FileName):
     return str(node3)
 
 
-def FixRaise(codeContents):
+def FixRaise(codeContents, _RefactoringTool):
     refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_raise'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
 
 
-def FixThrow(codeContents):
+def FixThrow(codeContents, _RefactoringTool):
     refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_throw'])
     node3 = refactoring_tool.refactor_string(codeContents, 'script')
     return str(node3)
@@ -111,34 +110,35 @@ def GenericReplacements(codeContents):
 
 def PerformFixes(codeContents, Filename):
     import re
+    from lib2to3.refactor import RefactoringTool as _RefactoringTool
     inner_code: str = codeContents
     inner_code = GenericReplacements(inner_code)
     if re.search(r"(for \w* in )", inner_code, re.IGNORECASE | re.MULTILINE):
-        inner_code = FixParens(inner_code)
+        inner_code = FixParens(inner_code,_RefactoringTool)
     if re.search(r"(= 0[0-9]+)", inner_code, re.IGNORECASE | re.MULTILINE):
-        inner_code = FixNumLiterals(inner_code)
+        inner_code = FixNumLiterals(inner_code,_RefactoringTool)
     if re.search(r"(ur\"|ur\')", inner_code, re.IGNORECASE | re.MULTILINE):
-        inner_code = FixUnicode(inner_code)
+        inner_code = FixUnicode(inner_code,_RefactoringTool)
     if "urllib" in inner_code:
-        inner_code = FixUrllib(inner_code)
+        inner_code = FixUrllib(inner_code,_RefactoringTool)
     if "unicode(" in inner_code:
-        inner_code = FixUnicode(inner_code)
+        inner_code = FixUnicode(inner_code,_RefactoringTool)
     if "exec " in inner_code:
-        inner_code = FixExecStatment(inner_code)
+        inner_code = FixExecStatment(inner_code,_RefactoringTool)
     if "print " in inner_code:
-        inner_code = FixPrintStatement(inner_code)
+        inner_code = FixPrintStatement(inner_code,_RefactoringTool)
     if "except " in inner_code:
-        inner_code = FixExceptStatement(inner_code)
+        inner_code = FixExceptStatement(inner_code,_RefactoringTool)
     if "xrange" in inner_code:
-        inner_code = FixXrange(inner_code)
+        inner_code = FixXrange(inner_code,_RefactoringTool)
     if "urlparse" in inner_code:
-        inner_code = FixImports(inner_code)
+        inner_code = FixImports(inner_code,_RefactoringTool)
     if "cPickle" in inner_code:
-        inner_code = FixImports(inner_code)
+        inner_code = FixImports(inner_code,_RefactoringTool)
     if "iteritems" in inner_code:
-        inner_code = FixDict(inner_code)
+        inner_code = FixDict(inner_code,_RefactoringTool)
     if "func_name" in inner_code:
-        inner_code = FixFunctionAttribs(inner_code)
+        inner_code = FixFunctionAttribs(inner_code,_RefactoringTool)
     if "throw(" in inner_code:
-        inner_code = FixThrow(inner_code)
+        inner_code = FixThrow(inner_code,_RefactoringTool)
     return inner_code
