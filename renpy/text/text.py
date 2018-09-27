@@ -1488,12 +1488,6 @@ class Text(renpy.display.core.Displayable):
                 if substitute is not False:
                     i, did_sub = renpy.substitutions.substitute(i, scope, substitute)
                     uses_scope = uses_scope or did_sub
-
-                if isinstance(i, str):
-                    i = str(i, "utf-8", "replace")
-                else:
-                    i = str(i)
-
             new_text.append(i)
 
         self._uses_scope = uses_scope
