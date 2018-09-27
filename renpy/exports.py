@@ -3012,6 +3012,8 @@ def fsencode(s):
 
     if isinstance(s, str):
         return s
+    if s is None:
+        return ""
 
     fsencoding = sys.getfilesystemencoding() or "utf-8"
     return s.encode(fsencoding, "replace")
