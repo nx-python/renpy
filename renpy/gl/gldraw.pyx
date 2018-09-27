@@ -477,12 +477,11 @@ cdef class GLDraw:
                 return False
 
         # Log the GL version.
-        renderer = <char *> glGetString(GL_RENDERER)
-        version = <char *> glGetString(GL_VERSION)
-
-        renpy.display.log.write("Vendor: %r", str(<char *> glGetString(GL_VENDOR)))
-        renpy.display.log.write("Renderer: %r", renderer)
-        renpy.display.log.write("Version: %r", version)
+        renderer = (<char *> glGetString(GL_RENDERER)).decode('UTF-8')
+        version = (<char *> glGetString(GL_VERSION)).decode('UTF-8')
+        renpy.display.log.write("Vendor: %s", (<char *> glGetString(GL_VENDOR)).decode('UTF-8'))
+        renpy.display.log.write("Renderer: %s", renderer)
+        renpy.display.log.write("Version: %s", version)
         renpy.display.log.write("Display Info: %s", self.display_info)
 
 
@@ -514,10 +513,8 @@ cdef class GLDraw:
 
         else:
             gltexture.use_gl()
-
-        extensions_string = <char *> glGetString(GL_EXTENSIONS)
+        extensions_string = (<char *> glGetString(GL_EXTENSIONS)).decode('UTF-8')
         extensions = set(extensions_string.split(" "))
-
         renpy.display.log.write("Extensions:")
 
         for i in sorted(extensions):
