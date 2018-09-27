@@ -349,7 +349,7 @@ def reached(obj, reachable, wait):
     if idobj in reachable:
         return
 
-    if isinstance(obj, (NoRollback, real_file)):  # @UndefinedVariable
+    if isinstance(obj, NoRollback):  # @UndefinedVariable
         reachable[idobj] = 0
         return
 
