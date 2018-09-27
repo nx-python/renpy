@@ -27,7 +27,7 @@ from __future__ import print_function
 import pickle
 import pickle
 
-from io import StringIO
+from io import StringIO, BytesIO
 
 import zipfile
 import re
@@ -400,7 +400,7 @@ def save(slotname, extra_info='', mutate_flag=False):
     if renpy.config.save_dump:
         save_dump(roots, renpy.game.log)
 
-    logf = StringIO()
+    logf = BytesIO()
     try:
         dump((roots, renpy.game.log), logf)
     except:
