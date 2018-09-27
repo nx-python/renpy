@@ -59,23 +59,11 @@ PyInterpreterState* interp;
 PyThreadState* thread = NULL;
 
 static void incref(PyObject *ref) {
-    PyThreadState *oldstate;
-
-    PyEval_AcquireLock();
-    oldstate = PyThreadState_Swap(thread);
     Py_INCREF(ref);
-    PyThreadState_Swap(oldstate);
-    PyEval_ReleaseLock();
 }
 
 static void decref(PyObject *ref) {
-    PyThreadState *oldstate;
-
-    PyEval_AcquireLock();
-    oldstate = PyThreadState_Swap(thread);
     Py_DECREF(ref);
-    PyThreadState_Swap(oldstate);
-    PyEval_ReleaseLock();
 }
 
 /* A mutex that protects the shared data structures. */
@@ -577,7 +565,6 @@ struct MediaState *load_sample(SDL_RWops *rw, const char *ext, double start, dou
 
 void RPS_play(int channel, SDL_RWops *rw, const char *ext, PyObject *name, int fadein, int tight, int paused, double start, double end) {
 
-    BEGIN();
 
     struct Channel *c;
 
@@ -586,8 +573,7 @@ void RPS_play(int channel, SDL_RWops *rw, const char *ext, PyObject *name, int f
     }
 
     c = &channels[channel];
-    ENTER();
-
+    Py_BEGIN_ALLOW_THREADS
     LOCK_NAME();
 
     /* Free playing and queued samples. */
@@ -615,7 +601,7 @@ void RPS_play(int channel, SDL_RWops *rw, const char *ext, PyObject *name, int f
 
     if (! c->playing) {
     	UNLOCK_NAME();
-    	EXIT();
+    	Py_BLOCK_THREADS
         error(SOUND_ERROR);
         return;
     }
@@ -635,7 +621,7 @@ void RPS_play(int channel, SDL_RWops *rw, const char *ext, PyObject *name, int f
 
     UNLOCK_NAME();
 
-    EXIT();
+    Py_END_ALLOW_THREADS
     error(SUCCESS);
 }
 
@@ -1075,7 +1061,6 @@ float RPS_get_volume(int channel) {
  */
 void RPS_set_pan(int channel, float pan, float delay) {
     struct Channel *c;
-    BEGIN();
 
     if (check_channel(channel)) {
         return;
@@ -1083,14 +1068,14 @@ void RPS_set_pan(int channel, float pan, float delay) {
 
     c = &channels[channel];
 
-    ENTER();
+    Py_BEGIN_ALLOW_THREADS
 
     c->pan_start = interpolate_pan(c);
     c->pan_end = pan;
     c->pan_length = (int) (audio_spec.freq * delay);
     c->pan_done = 0;
 
-    EXIT();
+    Py_END_ALLOW_THREADS
 
     error(SUCCESS);
 }
@@ -1100,7 +1085,6 @@ void RPS_set_pan(int channel, float pan, float delay) {
  */
 void RPS_set_secondary_volume(int channel, float vol2, float delay) {
     struct Channel *c;
-    BEGIN();
 
     if (check_channel(channel)) {
         return;
@@ -1108,14 +1092,14 @@ void RPS_set_secondary_volume(int channel, float vol2, float delay) {
 
     c = &channels[channel];
 
-    ENTER();
+    Py_BEGIN_ALLOW_THREADS
 
     c->vol2_start = interpolate_vol2(c);
     c->vol2_end = vol2;
     c->vol2_length = (int) (audio_spec.freq * delay);
     c->vol2_done = 0;
 
-    EXIT();
+    Py_END_ALLOW_THREADS
 
     error(SUCCESS);
 }
@@ -1248,7 +1232,7 @@ void RPS_init(int freq, int stereo, int samples, int status) {
 }
 
 void RPS_quit() {
-    BEGIN();
+
 
     if (! initialized) {
         return;
@@ -1256,9 +1240,9 @@ void RPS_quit() {
 
     int i;
 
-    ENTER();
+    Py_BEGIN_ALLOW_THREADS
     SDL_PauseAudio(1);
-    EXIT();
+    Py_END_ALLOW_THREADS
 
     for (i = 0; i < num_channels; i++) {
         RPS_stop(i);
@@ -1274,13 +1258,13 @@ void RPS_quit() {
 /* This must be called frequently, to take care of deallocating dead
  * streams. */
 void RPS_periodic() {
-    BEGIN();
+
 
     if (!dying) {
         return;
     }
 
-    ENTER();
+    Py_BEGIN_ALLOW_THREADS
 
     while (dying) {
         struct Dying *d = dying;
@@ -1289,7 +1273,7 @@ void RPS_periodic() {
         free(d);
     }
 
-    EXIT();
+    Py_END_ALLOW_THREADS
 }
 
 void RPS_advance_time(void) {
