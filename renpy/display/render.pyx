@@ -264,7 +264,7 @@ def invalidate(d):
     a redraw to start.
     """
 
-    for v in render_cache[id(d)].values():
+    for v in list(render_cache[id(d)].values()):
         v.kill_cache()
 
     if per_frame:
