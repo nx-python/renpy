@@ -176,11 +176,12 @@ def twomap(src, dst, white, black):
                wb + 1,
                wa + 1)
     else:
-        list(map(src, dst,
+
+        map(src, dst,
             ramp(br, wr),
             ramp(bg, wg),
             ramp(bb, wb),
-            ramp(0, wa)))
+            ramp(0, wa))
 
 
 def alpha_munge(src, dst, amap):
