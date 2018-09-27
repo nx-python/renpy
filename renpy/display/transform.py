@@ -1009,8 +1009,8 @@ class Transform(Container):
     def _show(self):
         self.update_state()
 
-
-Transform.render = types.MethodType(renpy.display.accelerator.transform_render, Transform)
+    def render(self, width, height, st, at):
+        return renpy.display.accelerator.transform_render(self, width, height, st, at)
 
 
 class ATLTransform(renpy.atl.ATLTransformBase, Transform):
