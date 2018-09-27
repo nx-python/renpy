@@ -1315,8 +1315,8 @@ class Input(renpy.text.text.Text):  # @UndefinedVariable
 
         elif ev.type == pygame.KEYDOWN:
 
-            if ev.str and ord(ev.str[0]) >= 32:
-                raw_text = ev.str
+            if ev.unicode and ord(ev.unicode[0]) >= 32:
+                raw_text = ev.unicode
             elif renpy.display.interface.text_event_in_queue():
                 raw_text = ''
 
