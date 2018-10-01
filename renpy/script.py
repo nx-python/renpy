@@ -507,9 +507,9 @@ class Script(object):
                 return None
 
             f.seek(0)
-            data = f.read()
+            data = zlib.decompress(f.read())
 
-            return data.decode("zlib")
+            return data
 
         # RPYC2 path.
         pos = len(RPYC2_HEADER)
@@ -597,8 +597,8 @@ class Script(object):
                 try:
                     self.write_rpyc_data(f, 2, dumps((data, stmts), 2))
 
-                    with open(fullfn, "r", newline='') as fullf:
-                        rpydigest = hashlib.md5(fullf.read().encode("utf-8")).digest()
+                    with open(fullfn, "rb") as fullf:
+                        rpydigest = hashlib.md5(fullf.read()).digest()
 
                     self.write_rpyc_md5(f, rpydigest)
 
