@@ -16,9 +16,12 @@ def FixUrllib(codeContents,_RefactoringTool):
 
 
 def FixUnicode(codeContents,_RefactoringTool):
-    refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_unicode'])
-    node3 = refactoring_tool.refactor_string(codeContents, 'script')
-    return str(node3)
+    try:
+        refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_unicode'])
+        node3 = refactoring_tool.refactor_string(codeContents, 'script')
+        return str(node3)
+    except:
+        return codeContents
 
 
 def FixExecStatment(codeContents,_RefactoringTool):
@@ -46,9 +49,12 @@ def FixExceptStatement(codeContents,_RefactoringTool):
 
 
 def FixXrange(codeContents,_RefactoringTool):
-    refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_xrange'])
-    node3 = refactoring_tool.refactor_string(codeContents, 'script')
-    return str(node3)
+    try:
+        refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_xrange'])
+        node3 = refactoring_tool.refactor_string(codeContents, 'script')
+        return str(node3)
+    except:
+        return codeContents
 
 
 def FixBasestring(codeContents,_RefactoringTool):
