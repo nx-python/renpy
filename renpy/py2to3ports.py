@@ -43,9 +43,12 @@ def FixPrintStatement(codeContents,_RefactoringTool):
 
 
 def FixExceptStatement(codeContents,_RefactoringTool):
-    refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_except'])
-    node3 = refactoring_tool.refactor_string(codeContents, 'script')
-    return str(node3)
+    try:
+        refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_except'])
+        node3 = refactoring_tool.refactor_string(codeContents, 'script')
+        return str(node3)
+    except:
+        return codeContents
 
 
 def FixXrange(codeContents,_RefactoringTool):
