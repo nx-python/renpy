@@ -349,8 +349,8 @@ class Frame(renpy.display.core.Displayable):
                     newcr.xclipping = True
                     newcr.yclipping = True
 
-                    for x in range(0, cdw, csw):
-                        for y in range(0, cdh, csh):
+                    for x in range(0, int(cdw), int(csw)):
+                        for y in range(0, int(cdh), int(csh)):
                             newcr.blit(cr, (x, y))
 
                     cr = newcr
