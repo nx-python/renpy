@@ -3602,3 +3602,5 @@ def FixBaseClasses():
     curse(str, "decode", classmethod(decode))
 
 FixBaseClasses()
+import builtins
+builtins.xrange=range
