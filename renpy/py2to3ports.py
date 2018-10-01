@@ -81,7 +81,7 @@ def FixFunctionAttribs(codeContents,_RefactoringTool):
     return str(node3)
 
 
-def FixImportsRelativity(codeContents, FileName):
+def FixImportsRelativity(codeContents,_RefactoringTool, FileName):
     refactoring_tool = _RefactoringTool(fixer_names=['lib2to3.fixes.fix_import'])
     node3 = refactoring_tool.refactor_string(codeContents, FileName)
     return str(node3)
