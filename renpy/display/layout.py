@@ -428,7 +428,8 @@ class Grid(Container):
             if len(self.children) < cols * rows:
                 raise Exception("Grid not completely full.")
             else:
-                raise Exception("Grid overfull.")
+                #raise Exception("Grid overfull.")
+                pass
 
         if self.transpose:
             children = [ ]
