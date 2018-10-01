@@ -3604,3 +3604,4 @@ def FixBaseClasses():
 FixBaseClasses()
 import builtins
 builtins.xrange=range
+builtins.unicode=str
