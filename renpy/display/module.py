@@ -197,6 +197,8 @@ def alpha_munge(src, dst, amap):
     alpha = byte_offset(dst)[3]
 
     if red is not None and alpha is not None:
+        if isinstance(amap, str):
+            amap = amap.encode("utf-8")
         _renpy.alpha_munge(src, dst, red, alpha, amap)
 
 
