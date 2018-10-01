@@ -685,8 +685,8 @@ class Script(object):
             renpy.loader.add_auto(rpyfn)
 
             if os.path.exists(rpyfn):
-                with open(rpyfn, "r", newline='') as f:
-                    rpydigest = hashlib.md5(f.read().encode("utf-8")).digest()
+                with open(rpyfn, "rb") as f:
+                    rpydigest = hashlib.md5(f.read()).digest()
             else:
                 rpydigest = None
 
