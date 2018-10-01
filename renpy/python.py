@@ -868,7 +868,8 @@ class RevertableList(list):
 
 
 def revertable_range(*args):
-    return RevertableList(list(range(*args)))
+    realargs = tuple(map(int,args))
+    return RevertableList(list(range(*realargs)))
 
 
 def revertable_sorted(*args, **kwargs):
