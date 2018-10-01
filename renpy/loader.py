@@ -129,11 +129,11 @@ def index_archives():
             l = f.readline()
 
             # 3.0 Branch.
-            if l.startswith("RPA-3.0 "):
+            if l.startswith(b"RPA-3.0 "):
                 offset = int(l[8:24], 16)
                 key = int(l[25:33], 16)
                 f.seek(offset)
-                index = loads(f.read().decode("zlib"))
+                index = loads(zlib.decompress(f.read()))
 
                 # Deobfuscate the index.
 
@@ -153,7 +153,7 @@ def index_archives():
             if l.startswith("RPA-2.0 "):
                 offset = int(l[8:], 16)
                 f.seek(offset)
-                index = loads(f.read().decode("zlib"))
+                index = loads(zlib.decompress(f.read()))
                 archives.append((prefix, index))
                 f.close()
                 continue
