@@ -162,7 +162,7 @@ def index_archives():
             f.close()
 
             fn = transfn(prefix + ".rpi")
-            index = loads(open(fn, "rb").read().decode("zlib"))
+            index = loads(zlib.decompress(open(fn, "rb").read()))
             archives.append((prefix, index))
         except:
             raise
@@ -336,7 +336,9 @@ class SubFile(object):
             self.offset += len(rv2)
         else:
             rv2 = ""
-
+        if not isinstance(rv2,str):
+            if isinstance(rv1,str):
+                rv1 = rv1.encode("utf-8")
         return (rv1 + rv2)
 
     def readline(self, length=None):
