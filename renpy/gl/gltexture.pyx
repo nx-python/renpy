@@ -32,9 +32,6 @@ from sdl2 cimport *
 from pygame_sdl2 cimport *
 import_pygame_sdl2()
 
-cdef extern from "<py3c/py3c.h>":
-    object PyStr_FromStringAndSize(const char *u, Py_ssize_t len)
-
 cdef extern from "Python.h":
     object PyByteArray_FromStringAndSize(const char *string, Py_ssize_t len)
 
