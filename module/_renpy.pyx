@@ -223,6 +223,8 @@ def alpha_munge(pysrc, pydst, srcchan, dstchan, amap):
     # pysrc.lock()
     # pydst.lock()
 
+    if isinstance(amap,str):
+        amap = amap.encode("utf-8")
     alphamunge_core(pysrc, pydst, bytes, srcchan, dstchan, amap)
 
     # pydst.unlock()
