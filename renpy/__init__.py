@@ -74,58 +74,10 @@ ios = False
 # Should we enable experimental features and debugging?
 experimental = "RENPY_EXPERIMENTAL" in os.environ
 
-import platform
-
-
-def get_windows_version():
-    """
-    When called on windows, returns the windows version.
-    """
-
-    import ctypes
-
-    class OSVERSIONINFOEXW(ctypes.Structure):
-        _fields_ = [('dwOSVersionInfoSize', ctypes.c_ulong),
-                    ('dwMajorVersion', ctypes.c_ulong),
-                    ('dwMinorVersion', ctypes.c_ulong),
-                    ('dwBuildNumber', ctypes.c_ulong),
-                    ('dwPlatformId', ctypes.c_ulong),
-                    ('szCSDVersion', ctypes.c_wchar*128),
-                    ('wServicePackMajor', ctypes.c_ushort),
-                    ('wServicePackMinor', ctypes.c_ushort),
-                    ('wSuiteMask', ctypes.c_ushort),
-                    ('wProductType', ctypes.c_byte),
-                    ('wReserved', ctypes.c_byte)]
-
-    try:
-
-        os_version = OSVERSIONINFOEXW()
-        os_version.dwOSVersionInfoSize = ctypes.sizeof(os_version)
-        retcode = ctypes.windll.Ntdll.RtlGetVersion(ctypes.byref(os_version))
-
-        # Om failure, assume we have a newer version of windows
-        if retcode != 0:
-            return (10, 0)
-
-        return (os_version.dwMajorVersion, os_version.dwMinorVersion)
-
-    except:
-        return (10, 0)
-
-
-if platform.win32_ver()[0]:
-    windows = get_windows_version()
-elif "RENPY_IOS" in os.environ:
-    ios = True
-elif platform.mac_ver()[0]:
-    macintosh = True
-elif "ANDROID_PRIVATE" in os.environ:
-    android = True
-else:
-    linux = True
+linux = True
 
 # A flag that's true if we're on a smartphone or tablet-like platform.
-mobile = android or ios
+mobile = False
 
 # A flag that's set to true if the game directory is bundled inside a mac app.
 macapp = False
