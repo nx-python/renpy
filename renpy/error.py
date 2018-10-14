@@ -25,7 +25,6 @@ from __future__ import print_function
 import traceback
 import sys
 import io
-import platform
 import linecache
 import time
 import os
@@ -216,7 +215,7 @@ def report_exception(e, editor=True):
 
     print(file=full)
     try:
-        print(platform.platform(), file=full)
+        print("switch", file=full)
         print(renpy.version, file=full)
         print(safe_utf8(renpy.config.name + " " + renpy.config.version), file=full)
         print(time.ctime(), file=full)

@@ -25,7 +25,6 @@ from __future__ import print_function
 import os.path
 import codecs
 import traceback
-import platform
 import time
 import tempfile
 import sys
@@ -126,7 +125,7 @@ class LogFile(object):
 
             self.write("%s", time.ctime())
             try:
-                self.write("%s", platform.platform())
+                self.write("%s", "Switch")
             except:
                 self.write("Unknown platform.")
             self.write("%s", renpy.version)
