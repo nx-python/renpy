@@ -3583,15 +3583,7 @@ def get_say_image_tag():
     return renpy.store._side_image_attributes[0]
 
 
-def FixBaseClasses():
-    from forbiddenfruit import curse
 
-    def decode(self, encoding=False, errors=False):
-        return str(self)
-
-    curse(str, "decode", classmethod(decode))
-
-FixBaseClasses()
 import builtins
 builtins.xrange=range
 builtins.unicode=str
