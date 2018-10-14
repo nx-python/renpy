@@ -366,7 +366,7 @@ def main():
             renpy.game.script.load_script()
 
         print(time.time() - start)
-        sys.exit(0)
+        #sys.exit(0)
 
     renpy.game.exception_info = 'After loading the script.'
 

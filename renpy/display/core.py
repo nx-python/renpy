@@ -2455,7 +2455,7 @@ class Interface(object):
 
         if ev.type == pygame.APP_TERMINATING:
             save()
-            sys.exit(0)
+            #sys.exit(0)
 
         if ev.type != pygame.APP_WILLENTERBACKGROUND:
             return False
@@ -2473,8 +2473,8 @@ class Interface(object):
 
         save()
 
-        if renpy.config.quit_on_mobile_background:
-            sys.exit(0)
+        #if renpy.config.quit_on_mobile_background:
+            #break
 
         renpy.exports.free_memory()
 
@@ -2487,7 +2487,7 @@ class Interface(object):
                 break
 
             if ev.type == pygame.APP_TERMINATING:
-                sys.exit(0)
+                break
 
         print("Entering foreground.")
 
