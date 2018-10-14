@@ -104,7 +104,7 @@ def FixThrow(codeContents, _RefactoringTool):
 
 def GenericReplacements(codeContents):
     import re
-    inner_code: str = codeContents
+    inner_code = codeContents
     if "b\"" in inner_code:
         inner_code = re.sub(r'os\.environ\.get\(b', "os.environ.get(", inner_code)
         inner_code = re.sub(r'os.environ.pop\(b', "os.environ.pop(", inner_code)
@@ -122,7 +122,7 @@ def GenericReplacements(codeContents):
 def PerformFixes(codeContents, Filename):
     import re
     from lib2to3.refactor import RefactoringTool as _RefactoringTool
-    inner_code: str = codeContents
+    inner_code = codeContents
     inner_code = GenericReplacements(inner_code)
     if re.search(r"(for \w* in )", inner_code, re.IGNORECASE | re.MULTILINE):
         inner_code = FixParens(inner_code,_RefactoringTool)
