@@ -22,7 +22,6 @@
 from __future__ import print_function
 import os.path
 import sys
-import subprocess
 import io
 import imp
 
@@ -331,12 +330,6 @@ You may be using a system install of python. Please run {0}.sh,
             except renpy.game.QuitException as e:
                 exit_status = e.status
 
-                if e.relaunch:
-                    if hasattr(sys, "renpy_executable"):
-                        subprocess.Popen([sys.renpy_executable] + sys.argv[1:])
-                    else:
-                        subprocess.Popen([sys.executable, "-EO"] + sys.argv)
-
             except renpy.game.ParseErrorException:
                 pass
 
@@ -355,7 +348,3 @@ You may be using a system install of python. Please run {0}.sh,
 
         if renpy.display.draw:
             renpy.display.draw.quit()
-
-        # Prevent subprocess from throwing errors while trying to run it's
-        # __del__ method during shutdown.
-        subprocess.Popen.__del__ = popen_del

@@ -1,4 +1,4 @@
-﻿# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -30,7 +30,6 @@ init -1500 python in updater:
     import os
     import urlparse
     import json
-    import subprocess
     import hashlib
     import time
     import sys
@@ -919,19 +918,10 @@ init -1500 python in updater:
             if renpy.windows:
 
                 CREATE_NO_WINDOW=0x08000000
-                p = subprocess.Popen(cmd,
-                    stdin=subprocess.PIPE,
-                    stdout=self.log,
-                    stderr=self.log,
-                    creationflags=CREATE_NO_WINDOW,
-                    cwd=renpy.fsencode(self.updatedir))
+                p = False
             else:
 
-                p = subprocess.Popen(cmd,
-                    stdin=subprocess.PIPE,
-                    stdout=self.log,
-                    stderr=self.log,
-                    cwd=renpy.fsencode(self.updatedir))
+                p = False
 
             p.stdin.close()
 

@@ -24,7 +24,6 @@ from __future__ import print_function
 import os
 import renpy
 import traceback
-import subprocess
 
 
 class Editor(object):
@@ -93,16 +92,6 @@ class SystemEditor(Editor):
     def open(self, filename, line=None, **kwargs):  # @ReservedAssignment
 
         filename = renpy.exports.fsencode(filename)
-
-        try:
-            if renpy.windows:
-                os.startfile(filename)  # @UndefinedVariable
-            elif renpy.macintosh:
-                subprocess.call([ "open", filename ])  # @UndefinedVariable
-            elif renpy.linux:
-                subprocess.call([ "xdg-open", filename ])  # @UndefinedVariable
-        except:
-            traceback.print_exc()
 
 
 # The editor that Ren'Py is using. It should be a subclass of the Editor

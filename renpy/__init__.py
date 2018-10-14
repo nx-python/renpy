@@ -528,9 +528,6 @@ def post_import():
     renpy.exports.store = renpy.store
     sys.modules['renpy.store'] = sys.modules['store']
 
-    import subprocess
-    sys.modules['renpy.subprocess'] = subprocess
-
     for k, v in renpy.defaultstore.__dict__.items():
         renpy.store.__dict__.setdefault(k, v)
 

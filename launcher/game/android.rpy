@@ -1,4 +1,4 @@
-﻿# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -51,7 +51,6 @@ init python:
     RELEASE_TEXT = _("Selects the Release build, which can be uploaded to stores. Changing between debug and release builds requires an uninstall from your device.")
 
 
-    import subprocess
     import re
     import os
     import json

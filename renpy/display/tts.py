@@ -24,7 +24,6 @@ from __future__ import print_function
 import sys
 import os
 import renpy.audio
-import subprocess
 import pygame
 
 
@@ -97,21 +96,21 @@ def default_tts_function(s):
 
     if "RENPY_TTS_COMMAND" in os.environ:
 
-        process = subprocess.Popen([ os.environ["RENPY_TTS_COMMAND"], fsencode(s) ])
+        process = False
 
     elif renpy.linux:
 
         if renpy.config.tts_voice is None:
-            process = subprocess.Popen([ "espeak", fsencode(s) ])
+            process = False
         else:
-            process = subprocess.Popen([ "espeak", "-v", fsencode(renpy.config.tts_voice), fsencode(s) ])
+            process = False
 
     elif renpy.macintosh:
 
         if renpy.config.tts_voice is None:
-            process = subprocess.Popen([ "say", fsencode(s) ])
+            process = False
         else:
-            process = subprocess.Popen([ "say", "-v", fsencode(renpy.config.tts_voice), fsencode(s) ])
+            process = False
 
     elif renpy.windows:
 
@@ -122,7 +121,7 @@ def default_tts_function(s):
 
         say_vbs = os.path.join(os.path.dirname(sys.executable), "say.vbs")
         s = s.replace('"', "")
-        process = subprocess.Popen([ "wscript", fsencode(say_vbs), fsencode(s), fsencode(voice) ])
+        process = False
 
 
 def tts(s):

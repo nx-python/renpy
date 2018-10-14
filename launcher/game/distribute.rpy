@@ -1,4 +1,4 @@
-﻿# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2018 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -41,7 +41,6 @@ init python in distribute:
     import sys
     import os
     import json
-    import subprocess
     import hashlib
     import struct
     import collections
@@ -1033,11 +1032,6 @@ init python in distribute:
                 isatty = os.isatty(sys.stdin.fileno())
             except:
                 isatty = False
-
-            if isatty:
-                subprocess.check_call(cmd)
-            else:
-                subprocess.check_call(cmd, stdout=self.log, stderr=subprocess.STDOUT)
 
 
         def sign_app(self, fl, appzip):
