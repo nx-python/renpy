@@ -132,15 +132,14 @@ def path_to_saves(gamedir, save_directory=None):
             return os.path.expanduser(rv)
 
     else:
-        rv = "~/.renpy/" + save_directory
-        return os.path.expanduser(rv)
+        rv = "/switch/renpyData/" + save_directory
+        return rv
 
 
 # Returns the path to the Ren'Py base directory (containing common and
 # the launcher, usually.)
 def path_to_renpy_base():
-    renpy_base = os.path.dirname(os.path.realpath(sys.argv[0]))
-    renpy_base = os.path.abspath(renpy_base)
+    renpy_base = '/switch/PyNX_pygame_sdl2/renpy'
 
     return renpy_base
 
@@ -153,7 +152,7 @@ try:
 except:
     raise
     print("Ren'Py requires at least python 2.6.")
-    sys.exit(0)
+    #sys.exit(0)
 
 android = ("ANDROID_PRIVATE" in os.environ)
 
