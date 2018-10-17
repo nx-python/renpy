@@ -115,7 +115,7 @@ if steam_sdk:
 # Modules directory.
 cython(
     "_renpy",
-    [ "IMG_savepng.c", "core.c", "subpixel.c"],
+    ["core.c", "subpixel.c"],
     sdl + [ png, 'z', 'm' ])
 
 FRIBIDI_SOURCES = """

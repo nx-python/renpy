@@ -1,6 +1,6 @@
 #include "renpy.h"
-#include "IMG_savepng.h"
 #include <SDL.h>
+#include <SDL_image.h>
 #include <pygame_sdl2/pygame_sdl2.h>
 #include <stdio.h>
 #include <math.h>
@@ -31,7 +31,7 @@ void save_png_core(PyObject *pysurf, SDL_RWops *rw, int compress) {
     surf = PySurface_AsSurface(pysurf);
 
     /* Can't release GIL, since we're not using threaded RWops. */
-    IMG_SavePNG_RW(rw, surf, compress);
+    IMG_SavePNG_RW(surf, rw, compress);
 }
 
 /* This pixellates a 32-bit RGBA pygame surface to a destination
