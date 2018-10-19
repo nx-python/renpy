@@ -69,7 +69,7 @@ python early:
         fn = fn.replace("game/", "")
 
         with renpy.notl_file(fn) as f:
-            data = f.read()
+            data = f.read().decode("utf-8")
 
         rawlines = [ i.rstrip() for i in data.split("\n") ]
 
